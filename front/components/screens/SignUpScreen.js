@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, StyleSheet } from "react-native";
 
-const LoginScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleLogin = () => {
-    // 나중에 로그인 요청 넣어야됨
-    navigation.navigate("Main");
+  const handleSignUp = () => {
+    // 나중에 회원가입 요청 넣어야됨
+    if (password === confirmPassword) {
+      navigation.navigate("Main");
+    } else {
+      alert("Passwords do not match!");
+    }
   };
 
   return (
@@ -15,9 +21,15 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.content}>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="Username"
           value={username}
           onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           style={styles.input}
@@ -26,7 +38,14 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Button title="Login" onPress={handleLogin} />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          secureTextEntry
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
+        <Button title="Sign Up" onPress={handleSignUp} />
       </View>
     </View>
   );
@@ -52,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignUpScreen;
