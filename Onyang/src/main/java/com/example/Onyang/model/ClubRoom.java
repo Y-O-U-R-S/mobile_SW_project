@@ -1,7 +1,5 @@
 package com.example.Onyang.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,16 +8,16 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "\"notice\"")
+@Table(name = "\"club_rooms\"")
 @Data
-public class Notice {
+public class ClubRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //식별번호
-    
-    private String title; //공지사항 제목
-    private String detail; //공지사항 내용
-    private LocalDateTime date; //날짜
-    
+    private int id;
 
+    private boolean isValid;
+    private String address;
+    private String roomPhone;
+    private String roomPicture;
+    private int isClean;
 }
