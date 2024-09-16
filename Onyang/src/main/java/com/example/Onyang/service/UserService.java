@@ -31,7 +31,12 @@ public class UserService {
             return false;
         }
     }
-
+    
+    public User findById(String id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElse(null);
+    }
+    
     public boolean authenticateUser(String id, String password) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
@@ -44,10 +49,6 @@ public class UserService {
         return userRepository.existsById(id);
     }
 
-    public User findById(String id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
-    }
 
     public User updateUser(String id, User userDto) {
         Optional<User> existingUser = userRepository.findById(id);
@@ -58,7 +59,7 @@ public class UserService {
             userToUpdate.setSchool(userDto.getSchool());
             userToUpdate.setPhone(userDto.getPhone());
             userToUpdate.setClub(userDto.getClub());
-            userToUpdate.setStuNum(userDto.getStuNum());
+            userToUpdate.setStunum(userDto.getStunum());
             userToUpdate.setMaster(userDto.isMaster());
             userToUpdate.setGender(userDto.getGender());
             userToUpdate.setCaution(userDto.getCaution());

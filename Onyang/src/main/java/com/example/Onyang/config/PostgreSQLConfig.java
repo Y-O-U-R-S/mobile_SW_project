@@ -1,40 +1,42 @@
-package com.example.Onyang.config;
+// postgresql db 연결 확인
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+// package com.example.Onyang.config;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.Statement;
+// import org.springframework.boot.ApplicationArguments;
+// import org.springframework.boot.ApplicationRunner;
+// import org.springframework.jdbc.core.JdbcTemplate;
+// import org.springframework.stereotype.Component;
 
-@Component
-public class PostgreSQLConfig implements ApplicationRunner {
+// import javax.sql.DataSource;
+// import java.sql.Connection;
+// import java.sql.Statement;
 
-    private final DataSource dataSource;
-    private final JdbcTemplate jdbcTemplate;
+// @Component
+// public class PostgreSQLConfig implements ApplicationRunner {
 
-    public PostgreSQLConfig(DataSource dataSource,
-                            JdbcTemplate jdbcTemplate) {
-        this.dataSource = dataSource;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+//     private final DataSource dataSource;
+//     private final JdbcTemplate jdbcTemplate;
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        try (Connection connection = dataSource.getConnection()){
-            System.out.println("db 연결 확인");
-            System.out.println("dataSource Class > " + dataSource.getClass());
-            System.out.println("URL > " + connection.getMetaData().getURL());
-            System.out.println("userName > " + connection.getMetaData().getUserName());
+//     public PostgreSQLConfig(DataSource dataSource,
+//                             JdbcTemplate jdbcTemplate) {
+//         this.dataSource = dataSource;
+//         this.jdbcTemplate = jdbcTemplate;
+//     }
 
-            Statement statement = connection.createStatement();
-            String sql = "CREATE TABLE TBL_TEST(NO INTEGER NOT NULL, TEST_NAME VARCHAR(255), PRIMARY KEY (NO))";
-            statement.executeUpdate(sql);
-        }
+//     @Override
+//     public void run(ApplicationArguments args) throws Exception {
+//         try (Connection connection = dataSource.getConnection()){
+//             System.out.println("db 연결 확인");
+//             System.out.println("dataSource Class > " + dataSource.getClass());
+//             System.out.println("URL > " + connection.getMetaData().getURL());
+//             System.out.println("userName > " + connection.getMetaData().getUserName());
 
-        jdbcTemplate.execute("INSERT INTO TBL_TEST VALUES (1, 'yun')");
-    }
+//             Statement statement = connection.createStatement();
+//             String sql = "CREATE TABLE TBL_TEST(NO INTEGER NOT NULL, TEST_NAME VARCHAR(255), PRIMARY KEY (NO))";
+//             statement.executeUpdate(sql);
+//         }
 
-}
+//         jdbcTemplate.execute("INSERT INTO TBL_TEST VALUES (1, 'yun')");
+//     }
+
+// }
