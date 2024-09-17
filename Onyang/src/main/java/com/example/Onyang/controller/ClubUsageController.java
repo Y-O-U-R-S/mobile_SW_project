@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Onyang.model.ClubUsage;
 import com.example.Onyang.service.ClubRoomService;
 import com.example.Onyang.service.ClubUsageService;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,6 +26,25 @@ public class ClubUsageController {
     private ClubUsageService clubUsageService;
     @Autowired
     private ClubRoomService clubRoomService;
+
+    @GetMapping
+    public List<ClubUsage> getAllUsages() {
+        return clubUsageService.getAllUsages();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable int id) {
+        try {
+            ClubUsage clubUsage = clubUsageService.findById(id);
+            if (clubUsage != null) {
+                return ResponseEntity.ok(clubUsage);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("조회 실패: " + e.getMessage());
+        }
+    }
 
     // 동아리방 신청
     @PostMapping("/apply")
@@ -36,6 +59,7 @@ public class ClubUsageController {
     @PostMapping("/return")
     public ResponseEntity<String> returnUsage(@RequestParam int roomId, @RequestParam int clean) {
         clubRoomService.returnRoom(roomId, true, clean);
+        clubUsageService.deleteUsage(roomId);
         return new ResponseEntity<>("Room returned successfully", HttpStatus.OK);
     }
 
@@ -45,9 +69,9 @@ public class ClubUsageController {
  * "clubName": "Example Club",
  * "school": "Example School",
  * "clubPhone": "123-456-7890",
- * "checkInTime": "2024-09-16T10:30:00",
- * "checkOutTime": "2024-09-16T12:30:00",
- * "masterName": "John Doe",
+ * "checkInTime": "2024-09-16 10:30:00",
+ * "checkOutTime": "2024-09-16 12:30:00",
+ * "masterName": "대표자 이름",
  * "clubRoom": {
  * "id": 1 // 사용하고자 하는 방의 ID
  * }

@@ -34,14 +34,14 @@ public class UserController {
     }
 
     @GetMapping("/checkId/{id}")
-    public ResponseEntity<Boolean> checkIdAvailability(@PathVariable("id") String id) {
+    public ResponseEntity<Boolean> checkIdAvailability(@PathVariable String id) {
         boolean exists = userService.existsById(id);
         return ResponseEntity.ok(!exists);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable("id") String id) {
+    public void deleteUser(@PathVariable String id) {
         boolean deleted = userService.deleteUserById(id);
         if (!deleted) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디");
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody User userDto) {
+    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User userDto) {
         if (!userService.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 아이디");
         }
