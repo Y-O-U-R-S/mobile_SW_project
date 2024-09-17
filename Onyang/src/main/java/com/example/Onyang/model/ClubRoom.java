@@ -19,5 +19,5 @@ public class ClubRoom {
     private String address;
     private String roomPhone;
     private String roomPicture;
-    private int isClean;
+    private int clean;
 }

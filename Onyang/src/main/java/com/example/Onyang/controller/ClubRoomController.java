@@ -1,6 +1,8 @@
 package com.example.Onyang.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +20,10 @@ public class ClubRoomController {
     @Autowired
     private ClubRoomService clubRoomService;
 
+    //처음에 동아리방 등록
     @PostMapping("/register")
-    public String registerRoom(@ModelAttribute ClubRoom room) {
+    public ResponseEntity<String> registerRoom(@ModelAttribute ClubRoom room) {
         clubRoomService.addRoom(room);
-        return "redirect:/rooms";
+        return new ResponseEntity<>("Usage applied successfully", HttpStatus.CREATED);
     }
 }

@@ -21,4 +21,8 @@ public class ClubRoomService {
         room.setValid(isValid);
         clubRoomRepository.save(room);
     }
+
+    public void returnRoom(int roomId, boolean isValid, int clean){
+        
+    }
 }
