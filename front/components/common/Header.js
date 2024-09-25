@@ -2,7 +2,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Header = ({ title, showBackButton = true }) => {
   const navigation = useNavigation();
@@ -33,9 +33,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   backButton: {
-    padding: 10, // 터치 범위 확장
     position: "absolute",
-    left: 10, // 왼쪽 여백
+    left: 10,
+    zIndex: 1, // 다른 요소들 위에 표시되도록 함
+    padding: 15, // 터치 범위 확장
   },
   titleContainer: {
     flex: 1,
