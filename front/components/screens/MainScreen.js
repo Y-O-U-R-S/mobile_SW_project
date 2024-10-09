@@ -2,66 +2,83 @@ import React from "react";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
-  Button,
-  TouchableOpacity,
   ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 
-const MainScreen = ({ navigation }) => {
+const MainScreen = () => {
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.container}>
-      <Header title="Onyang Oasis" showBackButton={false} />
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* 예약 현황 */}
-        <View style={styles.reservationStatus}>
-          <Text style={styles.reservationText}>장소: 아이디어 및 호실</Text>
-          <Text style={styles.reservationText}>날짜: 오늘</Text>
-          <Text style={styles.reservationText}>시간: 12:00 - 13:00</Text>
+    <SafeAreaView style={styles.container}>
+      <Header title="청순가련" />
+
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        style={styles.bannerContainer}
+      >
+        <View style={styles.bannerSlide}>
+          <Image
+            source={{ uri: "https://cdn2.thecatapi.com/images/53h.jpg" }}
+            style={styles.bannerImage}
+          />
+          <Text style={styles.bannerText}>
+            여기 안 가봤어!? 가장 핫한 팝업🔥
+          </Text>
         </View>
-
-        {/* 버튼들 */}
-        <TouchableOpacity
-          style={styles.roomButton}
-          onPress={() => navigation.navigate("BorrowRoom")}
-        >
-          <Text style={styles.buttonText}>
-            외국인들과 문화 교류 가능한 소통의 방
-          </Text>
-          <Text style={styles.startText}>시작하기</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.roomButton}
-          onPress={() => navigation.navigate("Map")}
-        >
-          <Text style={styles.buttonText}>
-            배고파서 뭘 먹지? 주변 맛집 확인
-          </Text>
-          <Text style={styles.startText}>시작하기</Text>
-        </TouchableOpacity>
-
-        {/* 공지사항 */}
-        <View style={styles.noticeBoard}>
-          <Text style={styles.noticeTitle}>공지사항</Text>
-          <View style={styles.noticeItem}>
-            <Text style={styles.noticeText}>안내사항</Text>
-            <Text style={styles.noticeDate}>2024-09-07</Text>
-          </View>
-          <View style={styles.noticeItem}>
-            <Text style={styles.noticeText}>안내사항</Text>
-            <Text style={styles.noticeDate}>2024-09-07</Text>
-          </View>
-          <View style={styles.noticeItem}>
-            <Text style={styles.noticeText}>안내사항</Text>
-            <Text style={styles.noticeDate}>2024-09-07</Text>
-          </View>
+        <View style={styles.bannerSlide}>
+          <Image
+            source={{ uri: "https://cdn2.thecatapi.com/images/bdq.jpg" }}
+            style={styles.bannerImage}
+          />
+          <Text style={styles.bannerText}>지금 가야할 팝업!</Text>
         </View>
       </ScrollView>
+
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Text style={styles.sectionHeader}>🔥 뜨끈 뜨끈 신상 팝업!</Text>
+        <View style={styles.popUpList}>
+          <TouchableOpacity style={styles.popUpCard}>
+            <Image
+              source={{
+                uri: "https://cdn2.thecatapi.com/images/BDMOZo668.jpg",
+              }}
+              style={styles.popUpImage}
+            />
+            <Text style={styles.popUpTitle}>시몬스 하드웨어 스토어</Text>
+            <Text style={styles.popUpDate}>9월 11일 ~ 12월 31일</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.popUpCard}>
+            <Image
+              source={{ uri: "https://cdn2.thecatapi.com/images/1u8.jpg" }}
+              style={styles.popUpImage}
+            />
+            <Text style={styles.popUpTitle}>두근 두근 온돌 남탕 온남</Text>
+            <Text style={styles.popUpDate}>9월 12일 ~ 12월 31일</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.popUpCard}>
+            <Image
+              source={{
+                uri: "https://cdn2.thecatapi.com/images/8krfAgKYD.jpg",
+              }}
+              style={styles.popUpImage}
+            />
+            <Text style={styles.popUpTitle}>초록 초록 잔디밭</Text>
+            <Text style={styles.popUpDate}>9월 30일 ~ 12월 29일</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
       <Footer />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -70,61 +87,64 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  content: {
-    paddingHorizontal: 16,
-    paddingBottom: 60, // Footer 공간 확보
-  },
-  reservationStatus: {
-    backgroundColor: "#3a3a3a",
-    borderRadius: 10,
-    padding: 16,
-    marginVertical: 16,
-  },
-  reservationText: {
-    color: "#fff",
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  roomButton: {
-    backgroundColor: "#c89d00",
-    borderRadius: 10,
-    padding: 16,
+  bannerContainer: {
+    height: 200,
     marginVertical: 10,
+  },
+  bannerSlide: {
+    width: 400,
     justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  startText: {
-    color: "#fff",
-    fontSize: 14,
-    marginTop: 5,
-  },
-  noticeBoard: {
-    marginVertical: 16,
-    padding: 16,
+  bannerImage: {
+    width: "100%",
+    height: 400,
     borderRadius: 10,
-    borderColor: "#c89d00",
-    borderWidth: 1,
   },
-  noticeTitle: {
+  bannerText: {
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 18,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 5,
+    borderRadius: 5,
+  },
+  contentContainer: {
+    paddingHorizontal: 15,
+  },
+  sectionHeader: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginVertical: 10,
   },
-  noticeItem: {
+  popUpList: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
   },
-  noticeText: {
-    fontSize: 16,
+  popUpCard: {
+    width: 110,
+    alignItems: "center",
+    marginVertical: 10,
   },
-  noticeDate: {
-    fontSize: 16,
-    color: "#555",
+  popUpImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  popUpTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 5,
+  },
+  popUpDate: {
+    fontSize: 12,
+    color: "#888",
+    textAlign: "center",
   },
 });
 

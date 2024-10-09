@@ -3,12 +3,12 @@ import { View, Text, StyleSheet } from "react-native";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 
-const NoticeScreen = () => {
+const PersonalInfoScreen = () => {
   return (
     <View style={styles.container}>
-      <Header title="공지사항 페이지" />
-      <Text style={styles.title}>공지사항</Text>
-      <Text style={styles.content}>여기에 공지사항이 표시됩니다.</Text>
+      <Header title="개인 정보 관리 페이지" />
+      <Text style={styles.title}>개인정보</Text>
+      <Text>사용자의 개인정보 관리 화면입니다.</Text>
       <Footer />
     </View>
   );
@@ -20,18 +20,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
   },
-  content: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#555",
-  },
 });
 
-export default NoticeScreen;
+export default PersonalInfoScreen;

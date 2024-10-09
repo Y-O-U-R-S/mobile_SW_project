@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Footer = () => {
   const navigation = useNavigation();
@@ -8,28 +9,34 @@ const Footer = () => {
   return (
     <View style={styles.footer}>
       <TouchableOpacity
-        style={styles.navButton}
         onPress={() => navigation.navigate("Main")}
+        style={styles.footerButton}
       >
-        <Text style={styles.navButtonText}>Home</Text>
+        <Icon name="home-outline" size={35} color="#000" />
+        <Text style={styles.footerText}>홈</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("SpaceRentalListScreen")}
+        style={styles.footerButton}
+      >
+        <Icon name="store-outline" size={35} color="#000" />
+        <Text style={styles.footerText}>창업 공간</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity
+        onPress={() => navigation.navigate("PopUpStore")}
+        style={styles.footerButton}
+      >
+        <Icon name="shopping-outline" size={35} color="#000" />
+        <Text style={styles.footerText}>팝업 스토어</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => navigation.navigate("BorrowRoom")}
+        onPress={() => navigation.navigate("MyPage")}
+        style={styles.footerButton}
       >
-        <Text style={styles.navButtonText}>Borrow</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => navigation.navigate("Map")}
-      >
-        <Text style={styles.navButtonText}>Map</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <Text style={styles.navButtonText}>Profile</Text>
+        <Icon name="account-outline" size={35} color="#000" />
+        <Text style={styles.footerText}>마이페이지</Text>
       </TouchableOpacity>
     </View>
   );
@@ -37,24 +44,22 @@ const Footer = () => {
 
 const styles = StyleSheet.create({
   footer: {
-    height: 60,
-    backgroundColor: "rgba(244, 81, 30, 0.7)",
-    flexDirection: "row", // 버튼을 가로로 배치
-    justifyContent: "space-around", // 버튼들 간격을 균등하게 배치
+    flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "center",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
+    backgroundColor: "#f8f8f8",
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
   },
-  navButton: {
-    flex: 1, // 버튼들이 동일한 크기로 가로로 배치되도록 설정
+  footerButton: {
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
   },
-  navButtonText: {
-    color: "#fff",
-    fontSize: 16,
+  footerText: {
+    fontSize: 13,
+    color: "#000",
+    marginTop: 4,
     fontWeight: "bold",
   },
 });
