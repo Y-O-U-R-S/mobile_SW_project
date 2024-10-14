@@ -23,12 +23,12 @@ const MyPageScreen = () => {
             onPress={() => navigation.navigate("Login")}
             style={styles.loginButton}
           >
-            <Text style={styles.loginButtonText}>로그인</Text>
+            <Text style={styles.loginButtonText}>로그아웃</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.menuSection}>
-          <TouchableOpacity onPress={() => navigation.navigate("StartupMain")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Main")}>
             <Text style={styles.menuText}>예비 창업자 도우미 | 바로가기</Text>
           </TouchableOpacity>
           <TouchableOpacity>

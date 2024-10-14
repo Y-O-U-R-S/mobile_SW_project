@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Header from "../common/Header";
-import Footer from "../common/Footer";
+import Footer from "../common/StartupFooter";
 import { useNavigation } from "@react-navigation/native";
 
 const SpaceRentalListScreen = () => {

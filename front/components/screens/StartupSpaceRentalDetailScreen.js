@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, SafeAreaView } from "react-native";
 import Header from "../common/Header";
-import Footer from "../common/Footer";
+import Footer from "../common/StartupFooter";
 
 const SpaceRentalDetailScreen = ({ route }) => {
   const { space } = route.params;

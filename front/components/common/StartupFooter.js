@@ -3,67 +3,77 @@ import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Footer = () => {
+const StartupFooter = () => {
   const navigation = useNavigation();
-  const route = useRoute(); // 현재 활성화된 화면의 정보 가져오기
+  const route = useRoute(); // 현재 활성화된 화면 정보 가져오기
 
-  const isActive = (screenName) => route.name === screenName;
+  const isActive = (screenName) => route.name === screenName; // 활성화된 화면 체크
 
   return (
     <View style={styles.footer}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Main")}
+        onPress={() => navigation.navigate("StartupMain")}
         style={styles.footerButton}
       >
         <Icon
-          name="home"
+          name="home-outline"
           size={35}
-          color={isActive("Main") ? "#4CAF50" : "#000"} // 활성화된 버튼 색상
+          color={isActive("StartupMain") ? "#4CAF50" : "#000"} // 활성화 색상
         />
-        <Text style={[styles.footerText, isActive("Main") && styles.activeText]}>
+        <Text
+          style={[
+            styles.footerText,
+            isActive("StartupMain") && styles.activeText,
+          ]}
+        >
           홈
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("Map")}
+        onPress={() => navigation.navigate("SpaceRentalListScreen")}
         style={styles.footerButton}
       >
         <Icon
-          name="map-marker"
+          name="domain"
           size={35}
-          color={isActive("Map") ? "#4CAF50" : "#000"}
-        />
-        <Text style={[styles.footerText, isActive("Map") && styles.activeText]}>
-          지도
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate("PopUpStore")}
-        style={styles.footerButton}
-      >
-        <Icon
-          name="store"
-          size={35}
-          color={isActive("PopUpStore") ? "#4CAF50" : "#000"}
+          color={isActive("SpaceRentalListScreen") ? "#4CAF50" : "#000"}
         />
         <Text
           style={[
             styles.footerText,
-            isActive("PopUpStore") && styles.activeText,
+            isActive("SpaceRentalListScreen") && styles.activeText,
           ]}
         >
-          팝업 스토어
+          창업 공간
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("MyPage")}
+        onPress={() => navigation.navigate("NearbyMarketInfo")}
         style={styles.footerButton}
       >
         <Icon
-          name="account-cog-outline"
+          name="chart-line"
+          size={35}
+          color={isActive("NearbyMarketInfo") ? "#4CAF50" : "#000"}
+        />
+        <Text
+          style={[
+            styles.footerText,
+            isActive("NearbyMarketInfo") && styles.activeText,
+          ]}
+        >
+          상권분석
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("StartupMyPage")}
+        style={styles.footerButton}
+      >
+        <Icon
+          name="account-box-outline"
           size={35}
           color={isActive("MyPage") ? "#4CAF50" : "#000"}
         />
@@ -98,8 +108,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   activeText: {
-    color: "#4CAF50", // 활성화된 버튼의 텍스트 색상
+    color: "#4CAF50",
   },
 });
 
-export default Footer;
+export default StartupFooter;
