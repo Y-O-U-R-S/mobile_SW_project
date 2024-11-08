@@ -13,11 +13,9 @@ public class User {
     private String id; 
     private String password;
     private String name;
-    private String school; //학교명
-    private String club; //동아리명
-    private String stunum; //학번
-    private String phone; //전화번호
-    private boolean master; //회장 여부
-    private String gender;
-    private int caution; //경고 횟수
+    private String email;
+    private String address;
+    private String phone;
+    private String birth;
+    private String job;
 }

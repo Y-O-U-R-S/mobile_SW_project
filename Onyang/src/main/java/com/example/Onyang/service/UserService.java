@@ -56,13 +56,11 @@ public class UserService {
             User userToUpdate = existingUser.get();
             userToUpdate.setName(userDto.getName());
             userToUpdate.setPassword(userDto.getPassword());
-            userToUpdate.setSchool(userDto.getSchool());
+            userToUpdate.setAddress(userDto.getAddress());
             userToUpdate.setPhone(userDto.getPhone());
-            userToUpdate.setClub(userDto.getClub());
-            userToUpdate.setStunum(userDto.getStunum());
-            userToUpdate.setMaster(userDto.isMaster());
-            userToUpdate.setGender(userDto.getGender());
-            userToUpdate.setCaution(userDto.getCaution());
+            userToUpdate.setBirth(userDto.getBirth());
+            userToUpdate.setJob(userDto.getJob());
+            userToUpdate.setEmail(userDto.getEmail());
             return userRepository.save(userToUpdate);
         }
         return null;

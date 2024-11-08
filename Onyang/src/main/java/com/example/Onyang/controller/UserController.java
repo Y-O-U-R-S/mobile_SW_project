@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.Onyang.model.Notice;
 import com.example.Onyang.model.User;
 import com.example.Onyang.service.UserService;
 
@@ -52,9 +53,9 @@ public class UserController {
     public ResponseEntity<?> loginUser(@RequestBody User userDto) {
         boolean authenticated = userService.authenticateUser(userDto.getId(), userDto.getPassword());
         if (authenticated) {
-            User authenticatedUser = userService.findById(userDto.getId());
+            // User authenticatedUser = userService.findById(userDto.getId());
             return ResponseEntity.ok()
-                    .body("로그인 가능. 사용자 권한: " + (authenticatedUser.isMaster() ? "회장" : "일반 사용자"));
+                    .body("로그인 가능." );
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 불가능");
         }
@@ -68,18 +69,18 @@ public class UserController {
         User updatedUser = userService.updateUser(id, userDto);
         return ResponseEntity.ok(updatedUser);
     }
-}
 
-// userDto json 예시
-// {
-// "id": "tempId",
-// "name": "tempName",
-// "password": "tempPW",
-// "school" : "sunmoon"
-// "stuNum" : "2020243001"
-// "phone": "01034445792",
-// "gender" : "M"
-// "club": "ABC",
-// "master" : false
-// "caution": 0
-// }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        try {
+            User user = userService.findById(id);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("조회 실패: " + e.getMessage());
+        }
+    }
+}

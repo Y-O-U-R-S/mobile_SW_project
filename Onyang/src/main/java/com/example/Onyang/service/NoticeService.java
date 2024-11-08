@@ -12,7 +12,7 @@ import com.example.Onyang.repository.NoticeRepository;
 
 @Service
 public class NoticeService {
-    
+
     @Autowired
     private NoticeRepository noticeRepository;
 
@@ -25,7 +25,7 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
-    public boolean deleteNoticeById(int id) { 
+    public boolean deleteNoticeById(int id) {
         try {
             noticeRepository.deleteById(id);
             return true;
@@ -33,7 +33,7 @@ public class NoticeService {
             return false;
         }
     }
-    
+
     public Notice findById(int id) {
         Optional<Notice> notice = noticeRepository.findById(id);
         return notice.orElse(null);
