@@ -28,9 +28,6 @@ const MyPageScreen = () => {
         </View>
 
         <View style={styles.menuSection}>
-          <TouchableOpacity onPress={() => navigation.navigate("StartupMain")}>
-            <Text style={styles.menuText}>예비 창업자 도우미 | 바로가기</Text>
-          </TouchableOpacity>
           <TouchableOpacity>
             <Text style={styles.menuText}>공지사항 | 이벤트</Text>
           </TouchableOpacity>
@@ -67,7 +64,6 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: 16,
     color: "#555",
-    fontFamily: "NotoSansKR-Regular",
   },
   loginButton: {
     marginTop: 10,
@@ -93,7 +89,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#333",
     marginBottom: 15,
-    fontFamily: "NotoSansKR-Regular",
   },
 });
 

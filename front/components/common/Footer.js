@@ -20,7 +20,9 @@ const Footer = () => {
           size={35}
           color={isActive("Main") ? "#4CAF50" : "#000"} // 활성화된 버튼 색상
         />
-        <Text style={[styles.footerText, isActive("Main") && styles.activeText]}>
+        <Text
+          style={[styles.footerText, isActive("Main") && styles.activeText]}
+        >
           홈
         </Text>
       </TouchableOpacity>
@@ -80,16 +82,18 @@ const Footer = () => {
 const styles = StyleSheet.create({
   footer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#f8f8f8",
     paddingVertical: 10,
+    paddingHorizontal: 10,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
   },
   footerButton: {
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
   },
   footerText: {
     fontSize: 13,
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   activeText: {
-    color: "#4CAF50", // 활성화된 버튼의 텍스트 색상
+    color: "#4CAF50",
   },
 });
 
