@@ -17,10 +17,10 @@ public class RentalSpace {
 
     private String name;
     private Float area;
-    private String contactNumber;
-    private String imageUrl;
+    private String contact_Number;
+    private String image_Url;
     private String description;
     private String address;
-    private int distanceFromStation;
+    private int distance_From_Onyang_Station;
     private String price;
 }

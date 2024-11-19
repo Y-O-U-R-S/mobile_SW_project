@@ -21,7 +21,7 @@ import com.example.Onyang.service.ChatbotService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/notice")
+@RequestMapping("/chatbot")
 public class ChatbotController {
 
     @Autowired

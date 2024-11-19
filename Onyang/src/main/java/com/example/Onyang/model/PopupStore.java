@@ -17,11 +17,11 @@ public class PopupStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String popupName;
+    private String popup_Name;
     private String address;
     private String status;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDateTime start_Date;
+    private LocalDateTime end_Date;
     private String description;
     private String image;
 }

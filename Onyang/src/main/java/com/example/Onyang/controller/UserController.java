@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.Onyang.model.Notice;
 import com.example.Onyang.model.User;
 import com.example.Onyang.service.UserService;
 
