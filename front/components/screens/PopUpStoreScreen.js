@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
   TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 
@@ -17,68 +17,78 @@ const PopUpStoreScreen = () => {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState("운영 중");
   const [searchQuery, setSearchQuery] = useState("");
+  const [popUpStores, setPopUpStores] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const popUpStoresRunning = [
-    {
-      id: 1,
-      image: "https://cdn2.thecatapi.com/images/MTU5Mzk3Nw.jpg",
-      title: "두근 두근 온통 냠냠 온냠 투게더",
-      date: "9월 11일 - 12월 31일",
-      remainingDays: "운영중 D-26",
-    },
-    {
-      id: 2,
-      image: "https://cdn2.thecatapi.com/images/BTiGuPOqW.jpg",
-      title: "시몬스 하드웨어 스토어",
-      date: "9월 11일 - 11월 29일",
-      remainingDays: "운영중 D-29",
-    },
-    {
-      id: 3,
-      image: "https://cdn2.thecatapi.com/images/36e.jpg",
-      title: "빨간 구두 빨간 가방 빨간 지하철",
-      date: "10월 2일 - 11월 31일",
-      remainingDays: "운영중",
-    },
-    {
-      id: 4,
-      image: "https://cdn2.thecatapi.com/images/ZR9dCROV8.jpg",
-      title: "HOOPER's STORE",
-      date: "10월 11일 - 1월 31일",
-      remainingDays: "운영중",
-    },
-  ];
+  const today = new Date(); // 오늘 날짜
 
-  const popUpStoresUpcoming = [
-    {
-      id: 5,
-      image: "https://cdn2.thecatapi.com/images/MTg3Mzk5Mw.jpg",
-      title: "추억의 정글짐 마루 마켓",
-      date: "12월 3일 - 3월 8일",
-      remainingDays: "오픈 예정",
-    },
-    {
-      id: 6,
-      image: "https://cdn2.thecatapi.com/images/ei1.jpg",
-      title: "카카오프랜즈 Beach Pub",
-      date: "12월 9일 - 4월 1일",
-      remainingDays: "오픈 예정",
-    },
-    {
-      id: 7,
-      image: "https://cdn2.thecatapi.com/images/clg.jpg",
-      title: "빵빵빵빵빵빵빵빵빵빵빵빵",
-      date: "10월 1일 - 1월 31일",
-      remainingDays: "오픈 예정",
-    },
-  ];
+  // 날짜 형식 변환 함수 (yyyy/MM/dd)
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}/${String(date.getDate()).padStart(2, "0")}`;
+  };
 
-  const filteredRunningStores = popUpStoresRunning.filter((store) =>
-    store.title.includes(searchQuery)
-  );
+  // 상태와 D-Day 계산 함수
+  const calculateStatusAndDday = (startDateString, endDateString) => {
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
 
-  const filteredUpcomingStores = popUpStoresUpcoming.filter((store) =>
-    store.title.includes(searchQuery)
+    if (today < startDate) {
+      const diff = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24));
+      return { status: "오픈 예정", dday: `D-${diff}` };
+    } else if (today >= startDate && today <= endDate) {
+      const diff = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+      return { status: "운영 중", dday: `D-${diff}` };
+    } else {
+      return { status: "종료됨", dday: "종료됨" };
+    }
+  };
+
+  // API 데이터 가져오기
+  const fetchPopUpStores = async () => {
+    try {
+      setLoading(true); // 로딩 상태 설정
+      const response = await axios.get("http://192.168.0.74:8000/popupStore"); // 서버 요청
+      const data = response.data;
+
+      if (Array.isArray(data)) {
+        const formattedStores = data.map((store) => {
+          const { status, dday } = calculateStatusAndDday(
+            store.start_Date,
+            store.end_Date
+          );
+          return {
+            id: store.id,
+            title: store.popup_Name,
+            address: store.address,
+            date: `${formatDate(store.start_Date)} - ${formatDate(
+              store.end_Date
+            )}`,
+            status,
+            dday,
+          };
+        });
+        setPopUpStores(formattedStores);
+      } else {
+        console.error("Unexpected data format:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching popup stores:", error.message || error);
+    } finally {
+      setLoading(false); // 로딩 종료
+    }
+  };
+
+  useEffect(() => {
+    fetchPopUpStores();
+  }, []);
+
+  // 현재 탭과 검색어를 기반으로 데이터 필터링
+  const filteredStores = popUpStores.filter(
+    (store) => store.status === activeTab && store.title.includes(searchQuery)
   );
 
   return (
@@ -113,8 +123,10 @@ const PopUpStoreScreen = () => {
 
       <ScrollView style={styles.container}>
         <View style={styles.cardContainer}>
-          {activeTab === "운영 중" &&
-            filteredRunningStores.map((store) => (
+          {loading ? (
+            <Text style={styles.loadingText}>로딩 중...</Text>
+          ) : filteredStores.length > 0 ? (
+            filteredStores.map((store) => (
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
@@ -122,31 +134,17 @@ const PopUpStoreScreen = () => {
                   navigation.navigate("PopUpStoreDetails", { store })
                 }
               >
-                <Image source={{ uri: store.image }} style={styles.image} />
                 <View style={styles.cardContent}>
                   <Text style={styles.storeTitle}>{store.title}</Text>
                   <Text style={styles.date}>{store.date}</Text>
-                  <Text style={styles.remaining}>{store.remainingDays}</Text>
+                  <Text style={styles.dday}>{store.dday}</Text>
+                  <Text style={styles.remaining}>{store.status}</Text>
                 </View>
               </TouchableOpacity>
-            ))}
-          {activeTab === "오픈 예정" &&
-            filteredUpcomingStores.map((store) => (
-              <TouchableOpacity
-                key={store.id}
-                style={styles.card}
-                onPress={() =>
-                  navigation.navigate("PopUpStoreDetails", { store })
-                }
-              >
-                <Image source={{ uri: store.image }} style={styles.image} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.storeTitle}>{store.title}</Text>
-                  <Text style={styles.date}>{store.date}</Text>
-                  <Text style={styles.remaining}>{store.remainingDays}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+            ))
+          ) : (
+            <Text style={styles.noResultText}>결과가 없습니다.</Text>
+          )}
         </View>
       </ScrollView>
       <Footer />
@@ -207,12 +205,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
-  image: {
-    width: "100%",
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
   cardContent: {
     alignItems: "flex-start",
   },
@@ -225,10 +217,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
   },
+  dday: {
+    fontSize: 14,
+    color: "#007BFF",
+    fontWeight: "bold",
+  },
   remaining: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#DAA520",
+  },
+  loadingText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+  },
+  noResultText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: "#999",
   },
 });
 

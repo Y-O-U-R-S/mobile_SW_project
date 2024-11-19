@@ -16,43 +16,32 @@ const MapScreen = () => {
   const [coordinates, setCoordinates] = useState([]);
   const mapRef = useRef(null);
 
-  const markers = [
-    {
-      id: 1,
-      title: "전통시장 옆 분위기 좋은 팝업 공간",
-      description:
-        "전통시장 옆 분위기 좋은 팝업 공간입니다. 1층만 사용 가능하며 전용면적 130평으로 감성을 담아 컨셉에 잘 녹아내기 좋은 공간.",
-      address: "충청남도 아산시 시민로405번길 11",
-      image: "https://cdn2.thecatapi.com/images/9ev.jpg",
-    },
-    {
-      id: 2,
-      title: "청년 팝업 스토어",
-      description: "여기서 팝업스토어를 확인하세요!",
-      address: "충청남도 아산시 시민로393번길 10-10",
-      image: "https://cdn2.thecatapi.com/images/YQtmOXP0_.jpg",
-    },
-  ];
-
-  const getCoordinates = async () => {
+  const fetchMarkersFromServer = async () => {
     try {
+      const response = await axios.get("http://192.168.0.74:8000/popupStore");
+      const markers = response.data;
+
       const results = await Promise.all(
         markers.map(async (marker) => {
-          const response = await axios.get(
+          const geoResponse = await axios.get(
             `https://dapi.kakao.com/v2/local/search/address.json`,
             {
               headers: {
-                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // 여기에 API 키 입력
+                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // Kakao API 키 입력
               },
               params: {
                 query: marker.address,
               },
             }
           );
-          if (response.data.documents.length > 0) {
-            const { y, x } = response.data.documents[0];
+
+          if (geoResponse.data.documents.length > 0) {
+            const { y, x } = geoResponse.data.documents[0];
             return {
-              ...marker,
+              id: marker.id,
+              title: marker.popup_Name,
+              description: marker.description,
+              address: marker.address,
               coordinate: {
                 latitude: parseFloat(y),
                 longitude: parseFloat(x),
@@ -60,21 +49,21 @@ const MapScreen = () => {
             };
           } else {
             console.warn(`No coordinates found for address: ${marker.address}`);
-            return marker;
+            return null;
           }
         })
       );
-      setCoordinates(results);
+
+      setCoordinates(results.filter((item) => item !== null));
     } catch (error) {
-      console.error("Geocoding error: ", error);
+      console.error("Error fetching popup stores or geocoding:", error);
     }
   };
 
   useEffect(() => {
-    getCoordinates();
+    fetchMarkersFromServer();
   }, []);
 
-  // 지도 위치를 마커에 맞게 조정
   useEffect(() => {
     if (coordinates.length > 0 && mapRef.current) {
       mapRef.current.fitToCoordinates(
@@ -105,19 +94,11 @@ const MapScreen = () => {
             <Marker key={marker.id} coordinate={marker.coordinate}>
               <View style={styles.markerContainer}>
                 <View style={styles.markerBackground}>
-                  <Image
-                    source={{ uri: marker.image }}
-                    style={styles.markerImage}
-                  />
                   <Text style={styles.markerTitle}>{marker.title}</Text>
                 </View>
               </View>
               <Callout tooltip>
                 <View style={styles.calloutContainer}>
-                  <Image
-                    source={{ uri: marker.image }}
-                    style={styles.calloutImage}
-                  />
                   <View style={styles.calloutTextContainer}>
                     <Text style={styles.calloutTitle}>{marker.title}</Text>
                     <Text style={styles.calloutAddress}>{marker.address}</Text>
@@ -163,11 +144,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  markerImage: {
-    width: 100,
-    height: 60,
-    borderRadius: 8,
-  },
   markerTitle: {
     marginTop: 5,
     fontSize: 12,
@@ -179,10 +155,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#fff",
     overflow: "hidden",
-  },
-  calloutImage: {
-    width: "100%",
-    height: 120,
   },
   calloutTextContainer: {
     padding: 10,

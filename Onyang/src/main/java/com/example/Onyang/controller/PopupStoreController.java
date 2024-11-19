@@ -19,7 +19,7 @@ import com.example.Onyang.service.PopupStoreService;
 
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://localhost:8081")
 @RestController
 @RequestMapping("/popupStore")
 public class PopupStoreController {
