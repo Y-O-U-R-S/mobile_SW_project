@@ -8,16 +8,19 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "\"club_rooms\"")
+@Table(name = "\"rental_space\"")
 @Data
-public class ClubRoom {
+public class RentalSpace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private boolean isValid;
+    private String name;
+    private Float area;
+    private String contactNumber;
+    private String imageUrl;
+    private String description;
     private String address;
-    private String roomPhone;
-    private String roomPicture;
-    private int clean;
+    private int distanceFromStation;
+    private String price;
 }
