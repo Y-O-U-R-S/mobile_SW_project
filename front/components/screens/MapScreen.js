@@ -19,18 +19,32 @@ const MapScreen = () => {
   const markers = [
     {
       id: 1,
-      title: "전통시장 옆 분위기 좋은 팝업 공간",
+      title: "온통 냠냠 온냠 투게더",
       description:
-        "전통시장 옆 분위기 좋은 팝업 공간입니다. 1층만 사용 가능하며 전용면적 130평으로 감성을 담아 컨셉에 잘 녹아내기 좋은 공간.",
-      address: "충청남도 아산시 시민로405번길 11",
-      image: "https://cdn2.thecatapi.com/images/9ev.jpg",
+        "두근 두근 온통 냠냠 온냠 투게더",
+      address: "충청남도 아산시 시민로393번길 12-2",
+      image: require("../../assets/together.jpg"),
     },
     {
       id: 2,
-      title: "청년 팝업 스토어",
-      description: "여기서 팝업스토어를 확인하세요!",
+      title: "시몬스 하드웨어",
+      description: "시몬스 하드웨어 스토어는 온양와 함께합니다!",
       address: "충청남도 아산시 시민로393번길 10-10",
-      image: "https://cdn2.thecatapi.com/images/YQtmOXP0_.jpg",
+      image: require("../../assets/simmons.jpg"),
+    },
+    {
+      id: 3,
+      title: "빨간 지하철",
+      description: "빨간 구두 빨간 가방 빨간 지하철",
+      address: "충청남도 아산시 시민로393번길 10-18",
+      image: require("../../assets/game.jpg"),
+    },
+    {
+      id: 4,
+      title: "HOOPER's STORE",
+      description: "HOOPER's STORE 드디어 대한민국 입점! 오직 온양에서만",
+      address: "충청남도 아산시 시민로393번길 10-21",
+      image: require("../../assets/hooper.jpg"),
     },
   ];
 
@@ -106,7 +120,7 @@ const MapScreen = () => {
               <View style={styles.markerContainer}>
                 <View style={styles.markerBackground}>
                   <Image
-                    source={{ uri: marker.image }}
+                    source={marker.image}
                     style={styles.markerImage}
                   />
                   <Text style={styles.markerTitle}>{marker.title}</Text>
@@ -115,7 +129,7 @@ const MapScreen = () => {
               <Callout tooltip>
                 <View style={styles.calloutContainer}>
                   <Image
-                    source={{ uri: marker.image }}
+                    source={marker.image}
                     style={styles.calloutImage}
                   />
                   <View style={styles.calloutTextContainer}>

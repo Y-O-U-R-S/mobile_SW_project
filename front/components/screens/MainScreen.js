@@ -12,6 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 
+
+
+
 const MainScreen = () => {
   const navigation = useNavigation();
 
@@ -27,7 +30,7 @@ const MainScreen = () => {
       >
         <View style={styles.bannerSlide}>
           <Image
-            source={{ uri: "https://cdn2.thecatapi.com/images/53h.jpg" }}
+            source={require("../../assets/game.jpg")}
             style={styles.bannerImage}
           />
           <Text style={styles.bannerText}>
@@ -36,7 +39,7 @@ const MainScreen = () => {
         </View>
         <View style={styles.bannerSlide}>
           <Image
-            source={{ uri: "https://cdn2.thecatapi.com/images/bdq.jpg" }}
+            source={require("../../assets/game.jpg")}
             style={styles.bannerImage}
           />
           <Text style={styles.bannerText}>지금 가야할 팝업!</Text>
@@ -48,9 +51,7 @@ const MainScreen = () => {
         <View style={styles.popUpList}>
           <TouchableOpacity style={styles.popUpCard}>
             <Image
-              source={{
-                uri: "https://cdn2.thecatapi.com/images/BDMOZo668.jpg",
-              }}
+              source={require("../../assets/simmons.jpg")}
               style={styles.popUpImage}
             />
             <Text style={styles.popUpTitle}>시몬스 하드웨어 스토어</Text>
@@ -58,17 +59,15 @@ const MainScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.popUpCard}>
             <Image
-              source={{ uri: "https://cdn2.thecatapi.com/images/1u8.jpg" }}
+              source={require("../../assets/together.jpg")}
               style={styles.popUpImage}
             />
-            <Text style={styles.popUpTitle}>두근 두근 온돌 남탕 온남</Text>
+            <Text style={styles.popUpTitle}>두근 두근 온통 냠냠</Text>
             <Text style={styles.popUpDate}>9월 12일 ~ 12월 31일</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.popUpCard}>
             <Image
-              source={{
-                uri: "https://cdn2.thecatapi.com/images/8krfAgKYD.jpg",
-              }}
+              source={require("../../assets/hooper.jpg")}
               style={styles.popUpImage}
             />
             <Text style={styles.popUpTitle}>초록 초록 잔디밭</Text>

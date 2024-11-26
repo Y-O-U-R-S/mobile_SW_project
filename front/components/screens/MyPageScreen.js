@@ -20,7 +20,7 @@ const MyPageScreen = () => {
           <Text style={styles.loginText}>3초만에 로그인하고</Text>
           <Text style={styles.loginText}>모든 서비스를 이용해 보세요!</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Login")}
+            // onPress={() => navigation.navigate("Login")}
             style={styles.loginButton}
           >
             <Text style={styles.loginButtonText}>로그인</Text>

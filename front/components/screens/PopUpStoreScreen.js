@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 
+
 const PopUpStoreScreen = () => {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState("운영 중");
@@ -21,28 +22,28 @@ const PopUpStoreScreen = () => {
   const popUpStoresRunning = [
     {
       id: 1,
-      image: "https://cdn2.thecatapi.com/images/MTU5Mzk3Nw.jpg",
+      image: require("../../assets/together.jpg"),
       title: "두근 두근 온통 냠냠 온냠 투게더",
       date: "9월 11일 - 12월 31일",
       remainingDays: "운영중 D-26",
     },
     {
       id: 2,
-      image: "https://cdn2.thecatapi.com/images/BTiGuPOqW.jpg",
+      image: require("../../assets/simmons.jpg"),
       title: "시몬스 하드웨어 스토어",
       date: "9월 11일 - 11월 29일",
       remainingDays: "운영중 D-29",
     },
     {
       id: 3,
-      image: "https://cdn2.thecatapi.com/images/36e.jpg",
+      image: require("../../assets/game.jpg"),
       title: "빨간 구두 빨간 가방 빨간 지하철",
       date: "10월 2일 - 11월 31일",
       remainingDays: "운영중",
     },
     {
       id: 4,
-      image: "https://cdn2.thecatapi.com/images/ZR9dCROV8.jpg",
+      image: require("../../assets/hooper.jpg"),
       title: "HOOPER's STORE",
       date: "10월 11일 - 1월 31일",
       remainingDays: "운영중",
@@ -52,22 +53,22 @@ const PopUpStoreScreen = () => {
   const popUpStoresUpcoming = [
     {
       id: 5,
-      image: "https://cdn2.thecatapi.com/images/MTg3Mzk5Mw.jpg",
+      image: require("../../assets/maru.jpg"),
       title: "추억의 정글짐 마루 마켓",
       date: "12월 3일 - 3월 8일",
       remainingDays: "오픈 예정",
     },
     {
       id: 6,
-      image: "https://cdn2.thecatapi.com/images/ei1.jpg",
+      image: require("../../assets/kakao.jpg"),
       title: "카카오프랜즈 Beach Pub",
       date: "12월 9일 - 4월 1일",
       remainingDays: "오픈 예정",
     },
     {
       id: 7,
-      image: "https://cdn2.thecatapi.com/images/clg.jpg",
-      title: "빵빵빵빵빵빵빵빵빵빵빵빵",
+      image: require("../../assets/backyard.jpg"),
+      title: "BACKYARD ● BUILDER 팝업",
       date: "10월 1일 - 1월 31일",
       remainingDays: "오픈 예정",
     },
@@ -118,11 +119,11 @@ const PopUpStoreScreen = () => {
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
-                onPress={() =>
-                  navigation.navigate("PopUpStoreDetails", { store })
-                }
+                // onPress={() =>
+                //   navigation.navigate("PopUpStoreDetails", { store })
+                // }
               >
-                <Image source={{ uri: store.image }} style={styles.image} />
+                <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
                   <Text style={styles.storeTitle}>{store.title}</Text>
                   <Text style={styles.date}>{store.date}</Text>
@@ -135,11 +136,11 @@ const PopUpStoreScreen = () => {
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
-                onPress={() =>
-                  navigation.navigate("PopUpStoreDetails", { store })
-                }
+                // onPress={() =>
+                //   navigation.navigate("PopUpStoreDetails", { store })
+                // }
               >
-                <Image source={{ uri: store.image }} style={styles.image} />
+                <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
                   <Text style={styles.storeTitle}>{store.title}</Text>
                   <Text style={styles.date}>{store.date}</Text>
