@@ -22,7 +22,9 @@ const PopUpStoreScreen = () => {
   const popUpStoresRunning = [
     {
       id: 1,
-      image: require("../../assets/together.jpg"),
+      image: {
+        uri: "https://yoursyhs3bucket.s3.ap-northeast-2.amazonaws.com/57244592-b103265c24947e0e06.jpeg"
+      },
       title: "두근 두근 온통 냠냠 온냠 투게더",
       date: "9월 11일 - 12월 31일",
       remainingDays: "운영중 D-26",
@@ -119,9 +121,9 @@ const PopUpStoreScreen = () => {
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
-                // onPress={() =>
-                //   navigation.navigate("PopUpStoreDetails", { store })
-                // }
+              // onPress={() =>
+              //   navigation.navigate("PopUpStoreDetails", { store })
+              // }
               >
                 <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
@@ -136,9 +138,9 @@ const PopUpStoreScreen = () => {
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
-                // onPress={() =>
-                //   navigation.navigate("PopUpStoreDetails", { store })
-                // }
+              // onPress={() =>
+              //   navigation.navigate("PopUpStoreDetails", { store })
+              // }
               >
                 <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
