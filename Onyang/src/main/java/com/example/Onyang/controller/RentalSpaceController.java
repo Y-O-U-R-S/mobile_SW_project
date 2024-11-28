@@ -51,8 +51,8 @@ public class RentalSpaceController {
             rentalSpace.setName(_name);
             rentalSpace.setArea(area);
             rentalSpace.setPrice(price);
-            rentalSpace.setContact_Number(contact_Number);
-            rentalSpace.setImage_Url(imageUrl);
+            rentalSpace.setContactNumber(contact_Number);
+            rentalSpace.setImageUrl(imageUrl);
             rentalSpace.setDescription(description);
             rentalSpace.setAddress(address);
             rentalSpace.setDistance_From_Onyang_Station(distance_From_Onyang_Station);
