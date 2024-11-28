@@ -15,38 +15,31 @@ import Footer from "../common/Footer";
 const MapScreen = () => {
   const [coordinates, setCoordinates] = useState([]);
   const mapRef = useRef(null);
+  const [markers, setMarkers] = useState([]);
 
-  const markers = [
-    {
-      id: 1,
-      title: "온통 냠냠 온냠 투게더",
-      description:
-        "두근 두근 온통 냠냠 온냠 투게더",
-      address: "충청남도 아산시 시민로393번길 12-2",
-      image: require("../../assets/together.jpg"),
-    },
-    {
-      id: 2,
-      title: "시몬스 하드웨어",
-      description: "시몬스 하드웨어 스토어는 온양와 함께합니다!",
-      address: "충청남도 아산시 시민로393번길 10-10",
-      image: require("../../assets/simmons.jpg"),
-    },
-    {
-      id: 3,
-      title: "빨간 지하철",
-      description: "빨간 구두 빨간 가방 빨간 지하철",
-      address: "충청남도 아산시 시민로393번길 10-18",
-      image: require("../../assets/game.jpg"),
-    },
-    {
-      id: 4,
-      title: "HOOPER's STORE",
-      description: "HOOPER's STORE 드디어 대한민국 입점! 오직 온양에서만",
-      address: "충청남도 아산시 시민로393번길 10-21",
-      image: require("../../assets/hooper.jpg"),
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://10.20.33.5:8000/popupStore');
+        console.log(response.data);
+        
+        // 서버에서 가져온 데이터를 markers 배열로 변환
+        const newMarkers = response.data.map(item => ({
+          id: item.id,
+          title: item.popup_Name,
+          description: item.description,
+          address: item.address,
+          image: { uri: item.image }, // 이미지 URL을 객체 형태로 변환
+        }));
+
+        setMarkers(newMarkers); // markers 상태 업데이트
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const getCoordinates = async () => {
     try {
@@ -85,8 +78,10 @@ const MapScreen = () => {
   };
 
   useEffect(() => {
-    getCoordinates();
-  }, []);
+    if (markers.length > 0) {
+      getCoordinates(); // markers가 업데이트 된 후에 좌표 가져오기
+    }
+  }, [markers]);
 
   // 지도 위치를 마커에 맞게 조정
   useEffect(() => {

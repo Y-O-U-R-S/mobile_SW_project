@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
+import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
@@ -19,62 +20,43 @@ const PopUpStoreScreen = () => {
   const [activeTab, setActiveTab] = useState("운영 중");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const popUpStoresRunning = [
-    {
-      id: 1,
-      image: {
-        uri: "https://yoursyhs3bucket.s3.ap-northeast-2.amazonaws.com/57244592-b103265c24947e0e06.jpeg"
-      },
-      title: "두근 두근 온통 냠냠 온냠 투게더",
-      date: "9월 11일 - 12월 31일",
-      remainingDays: "운영중 D-26",
-    },
-    {
-      id: 2,
-      image: require("../../assets/simmons.jpg"),
-      title: "시몬스 하드웨어 스토어",
-      date: "9월 11일 - 11월 29일",
-      remainingDays: "운영중 D-29",
-    },
-    {
-      id: 3,
-      image: require("../../assets/game.jpg"),
-      title: "빨간 구두 빨간 가방 빨간 지하철",
-      date: "10월 2일 - 11월 31일",
-      remainingDays: "운영중",
-    },
-    {
-      id: 4,
-      image: require("../../assets/hooper.jpg"),
-      title: "HOOPER's STORE",
-      date: "10월 11일 - 1월 31일",
-      remainingDays: "운영중",
-    },
-  ];
+  const [popUpStoresRunning, setPopUpStoresRunning] = useState([]);
+  const [popUpStoresUpcoming, setPopUpStoresUpcoming] = useState([]);
 
-  const popUpStoresUpcoming = [
-    {
-      id: 5,
-      image: require("../../assets/maru.jpg"),
-      title: "추억의 정글짐 마루 마켓",
-      date: "12월 3일 - 3월 8일",
-      remainingDays: "오픈 예정",
-    },
-    {
-      id: 6,
-      image: require("../../assets/kakao.jpg"),
-      title: "카카오프랜즈 Beach Pub",
-      date: "12월 9일 - 4월 1일",
-      remainingDays: "오픈 예정",
-    },
-    {
-      id: 7,
-      image: require("../../assets/backyard.jpg"),
-      title: "BACKYARD ● BUILDER 팝업",
-      date: "10월 1일 - 1월 31일",
-      remainingDays: "오픈 예정",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://10.20.33.5:8000/popupStore');
+        console.log(response.data);
+
+        const runningStores = [];
+        const upcomingStores = [];
+
+        response.data.forEach(item => {
+          const store = {
+            id: item.id,
+            image: { uri: item.image },
+            title: item.popup_Name,
+            date: `${item.start_Date.split("T")[0]} - ${item.end_Date.split("T")[0]}`,
+            remainingDays: calculateRemainingDays(item.status, item.start_Date, item.end_Date),
+          };
+
+          if (item.status === "운영중") {
+            runningStores.push(store);
+          } else if (item.status === "오픈 예정") {
+            upcomingStores.push(store);
+          }
+        });
+
+        setPopUpStoresRunning(runningStores);
+        setPopUpStoresUpcoming(upcomingStores);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filteredRunningStores = popUpStoresRunning.filter((store) =>
     store.title.includes(searchQuery)
@@ -83,6 +65,25 @@ const PopUpStoreScreen = () => {
   const filteredUpcomingStores = popUpStoresUpcoming.filter((store) =>
     store.title.includes(searchQuery)
   );
+
+
+  const calculateRemainingDays = (status, startDate, endDate) => {
+    const today = new Date();
+    const end = new Date(endDate);
+    const start = new Date(startDate);
+
+    if (status === "운영중") {
+      const diffTime = end - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // 밀리초를 일로 변환
+      return diffDays > 0 ? `종료 D-${diffDays}` : "종료";
+    } else if (status === "오픈 예정") {
+      const diffTime = start - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 0 ? `오픈 D-${diffDays}` : "오픈";
+    }
+    return "";
+  };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -121,9 +122,9 @@ const PopUpStoreScreen = () => {
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
-              // onPress={() =>
-              //   navigation.navigate("PopUpStoreDetails", { store })
-              // }
+                onPress={() =>
+                  navigation.navigate("PopUpStoreDetails", { id: store.id })
+                }
               >
                 <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
@@ -138,9 +139,9 @@ const PopUpStoreScreen = () => {
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
-              // onPress={() =>
-              //   navigation.navigate("PopUpStoreDetails", { store })
-              // }
+                onPress={() =>
+                  navigation.navigate("PopUpStoreDetails", { id: store.id })
+                }
               >
                 <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
