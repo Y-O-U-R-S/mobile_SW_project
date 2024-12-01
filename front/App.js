@@ -12,6 +12,7 @@ import PopUpStoreDetailsScreen from "./components/screens/PopUpStoreDetailsScree
 import MyPageScreen from "./components/screens/MyPageScreen";
 import NoticeScreen from "./components/screens/NoticeScreen";
 import MapScreen from "./components/screens/MapScreen";
+import QnAScreen from "./components/screens/QnAScreen";
 
 const Stack = createStackNavigator();
 
@@ -21,7 +22,7 @@ export default function App() {
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Main"
+          initialRouteName="QnAScreen"
           screenOptions={{
             headerShown: false,
             animationEnabled: false,
@@ -32,6 +33,7 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="PopUpStore" component={PopUpStoreScreen} />
           <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+          <Stack.Screen name="QnAScreen" component={QnAScreen} />
           <Stack.Screen
             name="PopUpStoreDetails"
             component={PopUpStoreDetailsScreen}
