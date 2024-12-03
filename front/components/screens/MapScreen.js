@@ -15,8 +15,34 @@ import Footer from "../common/Footer";
 const MapScreen = () => {
   const [coordinates, setCoordinates] = useState([]);
   const mapRef = useRef(null);
+  const [markers, setMarkers] = useState([]);
 
-  const fetchMarkersFromServer = async () => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://10.20.33.5:8000/popupStore');
+        console.log(response.data);
+        
+        // 서버에서 가져온 데이터를 markers 배열로 변환
+        const newMarkers = response.data.map(item => ({
+          id: item.id,
+          title: item.popup_Name,
+          description: item.description,
+          address: item.address,
+          image: { uri: item.image }, // 이미지 URL을 객체 형태로 변환
+        }));
+
+        setMarkers(newMarkers); // markers 상태 업데이트
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getCoordinates = async () => {
     try {
       const response = await axios.get("http://192.168.0.74:8000/popupStore");
       const markers = response.data;
@@ -61,8 +87,11 @@ const MapScreen = () => {
   };
 
   useEffect(() => {
-    fetchMarkersFromServer();
-  }, []);
+
+    if (markers.length > 0) {
+      getCoordinates(); // markers가 업데이트 된 후에 좌표 가져오기
+    }
+  }, [markers]);
 
   useEffect(() => {
     if (coordinates.length > 0 && mapRef.current) {
@@ -94,11 +123,22 @@ const MapScreen = () => {
             <Marker key={marker.id} coordinate={marker.coordinate}>
               <View style={styles.markerContainer}>
                 <View style={styles.markerBackground}>
+
+                  <Image
+                    source={marker.image}
+                    style={styles.markerImage}
+                  />
+
                   <Text style={styles.markerTitle}>{marker.title}</Text>
                 </View>
               </View>
               <Callout tooltip>
                 <View style={styles.calloutContainer}>
+
+                  <Image
+                    source={marker.image}
+                    style={styles.calloutImage}
+                  />
                   <View style={styles.calloutTextContainer}>
                     <Text style={styles.calloutTitle}>{marker.title}</Text>
                     <Text style={styles.calloutAddress}>{marker.address}</Text>

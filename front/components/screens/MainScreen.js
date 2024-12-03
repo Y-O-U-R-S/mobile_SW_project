@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,9 +11,31 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
+import axios from 'axios'
 
 const MainScreen = () => {
   const navigation = useNavigation();
+  const [popUps, setPopUps] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://10.20.32.148:8000/popupStore');
+        console.log(response.data);
+        setPopUps(response.data);
+      } catch (error) {
+        console.error(error); // 에러 처리
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', options); // 한국 형식으로 변환
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,55 +47,44 @@ const MainScreen = () => {
         showsHorizontalScrollIndicator={false}
         style={styles.bannerContainer}
       >
-        <View style={styles.bannerSlide}>
-          <Image
-            source={{ uri: "https://cdn2.thecatapi.com/images/53h.jpg" }}
-            style={styles.bannerImage}
-          />
-          <Text style={styles.bannerText}>
-            여기 안 가봤어!? 가장 핫한 팝업🔥
-          </Text>
-        </View>
-        <View style={styles.bannerSlide}>
-          <Image
-            source={{ uri: "https://cdn2.thecatapi.com/images/bdq.jpg" }}
-            style={styles.bannerImage}
-          />
-          <Text style={styles.bannerText}>지금 가야할 팝업!</Text>
-        </View>
+        {popUps.length > 0 && (
+          <>
+            <View style={styles.bannerSlide}>
+              <Image
+                source={{ uri: popUps[0].image }} // 첫 번째 팝업 이미지
+                style={styles.bannerImage}
+              />
+              <Text style={styles.bannerText}>
+                여기 안 가봤어!? 가장 핫한 팝업🔥
+              </Text>
+            </View>
+            <View style={styles.bannerSlide}>
+              <Image
+                source={{ uri: popUps[0].image }} // 첫 번째 팝업 이미지 재사용
+                style={styles.bannerImage}
+              />
+              <Text style={styles.bannerText}>지금 가야할 팝업!</Text>
+            </View>
+          </>
+        )}
       </ScrollView>
 
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.sectionHeader}>🔥 뜨끈 뜨끈 신상 팝업!</Text>
+      <Text style={styles.sectionHeader}>🔥 뜨끈 뜨끈 신상 팝업!</Text>
+      <ScrollView
+        horizontal
+        contentContainerStyle={styles.popUpList}
+        showsHorizontalScrollIndicator={false}>
         <View style={styles.popUpList}>
-          <TouchableOpacity style={styles.popUpCard}>
-            <Image
-              source={{
-                uri: "https://cdn2.thecatapi.com/images/BDMOZo668.jpg",
-              }}
-              style={styles.popUpImage}
-            />
-            <Text style={styles.popUpTitle}>시몬스 하드웨어 스토어</Text>
-            <Text style={styles.popUpDate}>9월 11일 ~ 12월 31일</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.popUpCard}>
-            <Image
-              source={{ uri: "https://cdn2.thecatapi.com/images/1u8.jpg" }}
-              style={styles.popUpImage}
-            />
-            <Text style={styles.popUpTitle}>두근 두근 온돌 남탕 온남</Text>
-            <Text style={styles.popUpDate}>9월 12일 ~ 12월 31일</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.popUpCard}>
-            <Image
-              source={{
-                uri: "https://cdn2.thecatapi.com/images/8krfAgKYD.jpg",
-              }}
-              style={styles.popUpImage}
-            />
-            <Text style={styles.popUpTitle}>초록 초록 잔디밭</Text>
-            <Text style={styles.popUpDate}>9월 30일 ~ 12월 29일</Text>
-          </TouchableOpacity>
+          {popUps.map((popUp, index) => ( // 데이터 맵핑
+            <TouchableOpacity key={index} style={styles.popUpCard}>
+              <Image
+                source={{ uri: popUp.image }} // 이미지 URL을 서버에서 가져온 값으로 설정
+                style={styles.popUpImage}
+              />
+              <Text style={styles.popUpTitle}>{popUp.popup_Name}</Text>
+              <Text style={styles.popUpDate}>{formatDate(popUp.start_Date)} ~ {formatDate(popUp.end_Date)}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </ScrollView>
 
@@ -117,6 +128,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   sectionHeader: {
+    
     fontSize: 18,
     fontWeight: "bold",
     marginVertical: 10,

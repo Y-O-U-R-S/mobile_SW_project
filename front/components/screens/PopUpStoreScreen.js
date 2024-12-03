@@ -8,10 +8,12 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
+import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
+
 
 const PopUpStoreScreen = () => {
   const navigation = useNavigation();
@@ -20,16 +22,45 @@ const PopUpStoreScreen = () => {
   const [popUpStores, setPopUpStores] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const today = new Date(); // 오늘 날짜
 
-  // 날짜 형식 변환 함수 (yyyy/MM/dd)
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}/${String(date.getDate()).padStart(2, "0")}`;
-  };
+  const [popUpStoresRunning, setPopUpStoresRunning] = useState([]);
+  const [popUpStoresUpcoming, setPopUpStoresUpcoming] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://10.20.33.5:8000/popupStore');
+        console.log(response.data);
+
+        const runningStores = [];
+        const upcomingStores = [];
+
+        response.data.forEach(item => {
+          const store = {
+            id: item.id,
+            image: { uri: item.image },
+            title: item.popup_Name,
+            date: `${item.start_Date.split("T")[0]} - ${item.end_Date.split("T")[0]}`,
+            remainingDays: calculateRemainingDays(item.status, item.start_Date, item.end_Date),
+          };
+
+          if (item.status === "운영중") {
+            runningStores.push(store);
+          } else if (item.status === "오픈 예정") {
+            upcomingStores.push(store);
+          }
+        });
+
+        setPopUpStoresRunning(runningStores);
+        setPopUpStoresUpcoming(upcomingStores);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   // 상태와 D-Day 계산 함수
   const calculateStatusAndDday = (startDateString, endDateString) => {
@@ -91,6 +122,25 @@ const PopUpStoreScreen = () => {
     (store) => store.status === activeTab && store.title.includes(searchQuery)
   );
 
+
+  const calculateRemainingDays = (status, startDate, endDate) => {
+    const today = new Date();
+    const end = new Date(endDate);
+    const start = new Date(startDate);
+
+    if (status === "운영중") {
+      const diffTime = end - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // 밀리초를 일로 변환
+      return diffDays > 0 ? `종료 D-${diffDays}` : "종료";
+    } else if (status === "오픈 예정") {
+      const diffTime = start - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 0 ? `오픈 D-${diffDays}` : "오픈";
+    }
+    return "";
+  };
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header title="팝업 스토어 둘러보기" />
@@ -123,17 +173,36 @@ const PopUpStoreScreen = () => {
 
       <ScrollView style={styles.container}>
         <View style={styles.cardContainer}>
-          {loading ? (
-            <Text style={styles.loadingText}>로딩 중...</Text>
-          ) : filteredStores.length > 0 ? (
-            filteredStores.map((store) => (
+
+          {activeTab === "운영 중" &&
+            filteredRunningStores.map((store) => (
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
                 onPress={() =>
-                  navigation.navigate("PopUpStoreDetails", { store })
+                  navigation.navigate("PopUpStoreDetails", { id: store.id })
                 }
               >
+                <Image source={store.image} style={styles.image} />
+                <View style={styles.cardContent}>
+                  <Text style={styles.storeTitle}>{store.title}</Text>
+                  <Text style={styles.date}>{store.date}</Text>
+                  <Text style={styles.remaining}>{store.remainingDays}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          {activeTab === "오픈 예정" &&
+            filteredUpcomingStores.map((store) => (
+
+              <TouchableOpacity
+                key={store.id}
+                style={styles.card}
+                onPress={() =>
+                  navigation.navigate("PopUpStoreDetails", { id: store.id })
+                }
+              >
+
+                <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
                   <Text style={styles.storeTitle}>{store.title}</Text>
                   <Text style={styles.date}>{store.date}</Text>

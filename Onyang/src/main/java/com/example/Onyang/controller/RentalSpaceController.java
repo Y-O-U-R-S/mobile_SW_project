@@ -9,12 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.Onyang.model.RentalSpace;
 import com.example.Onyang.service.RentalSpaceService;
+import com.example.Onyang.service.S3ImageService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.*;
@@ -26,10 +30,32 @@ public class RentalSpaceController {
     @Autowired
     private RentalSpaceService rentalSpaceService;
 
+    @Autowired
+    private S3ImageService s3ImageService;
+
     // 값 넣기
     @PostMapping
-    public ResponseEntity<?> addRentalSpace(@RequestBody RentalSpace rentalSpace) {
+    public ResponseEntity<?> addRentalSpace(@RequestParam("name") String _name,
+            @RequestParam("area") float area,
+            @RequestParam("price") String price,
+            @RequestParam("contact_Number") String contact_Number,
+            @RequestParam("address") String address,
+            @RequestParam("description") String description,
+            @RequestParam("imageUrl") MultipartFile _imageUrl,
+            @RequestParam("distance_From_Onyang_Station") int distance_From_Onyang_Station
+            ) {
         try {
+            String imageUrl = s3ImageService.upload(_imageUrl);
+
+            RentalSpace rentalSpace = new RentalSpace();
+            rentalSpace.setName(_name);
+            rentalSpace.setArea(area);
+            rentalSpace.setPrice(price);
+            rentalSpace.setContactNumber(contact_Number);
+            rentalSpace.setImageUrl(imageUrl);
+            rentalSpace.setDescription(description);
+            rentalSpace.setAddress(address);
+            rentalSpace.setDistance_From_Onyang_Station(distance_From_Onyang_Station);
             RentalSpace addRentalSpace = rentalSpaceService.addSpace(rentalSpace);
             return ResponseEntity.ok(addRentalSpace);
         } catch (Exception e) {
