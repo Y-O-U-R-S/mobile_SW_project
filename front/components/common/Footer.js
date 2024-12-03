@@ -72,7 +72,7 @@ const Footer = () => {
         <Text
           style={[styles.footerText, isActive("MyPage") && styles.activeText]}
         >
-          마이페이지
+          더 알아보기
         </Text>
       </TouchableOpacity>
     </View>

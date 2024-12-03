@@ -20,7 +20,7 @@ const MainScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://10.20.33.5:8000/popupStore');
+        const response = await axios.get('http://10.20.32.148:8000/popupStore');
         console.log(response.data);
         setPopUps(response.data);
       } catch (error) {

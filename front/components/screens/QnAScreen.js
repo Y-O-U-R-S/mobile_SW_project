@@ -1,35 +1,38 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  Modal
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+  Modal,
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+
+import Header from "../common/Header";
+import Footer from "../common/StartupFooter";
 
 const QnAScreen = () => {
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
-  const [questionTitle, setQuestionTitle] = useState('');
-  const [questionContent, setQuestionContent] = useState('');
+  const [questionTitle, setQuestionTitle] = useState("");
+  const [questionContent, setQuestionContent] = useState("");
 
   const QnAItem = ({ question, answer, isOpen = false }) => {
     const [expanded, setExpanded] = useState(isOpen);
 
     return (
       <View style={styles.qnaItem}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.questionRow}
           onPress={() => setExpanded(!expanded)}
         >
           <Text style={styles.questionText}>Q {question}</Text>
-          <Icon 
-            name={expanded ? 'chevron-up' : 'chevron-down'} 
-            size={20} 
+          <Icon
+            name={expanded ? "chevron-up" : "chevron-down"}
+            size={20}
             color="#666"
           />
         </TouchableOpacity>
@@ -44,14 +47,15 @@ const QnAScreen = () => {
 
   const handleSubmitQuestion = () => {
     // 여기에 질문 제출 로직 추가
-    console.log('질문 제출:', { questionTitle, questionContent });
+    console.log("질문 제출:", { questionTitle, questionContent });
     setModalVisible(false);
-    setQuestionTitle('');
-    setQuestionContent('');
+    setQuestionTitle("");
+    setQuestionContent("");
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header title="QnA" />
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -80,7 +84,7 @@ const QnAScreen = () => {
         />
       </ScrollView>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.writeButton}
         onPress={() => setModalVisible(true)}
       >
@@ -120,7 +124,7 @@ const QnAScreen = () => {
               textAlignVertical="top"
             />
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.submitButton}
               onPress={handleSubmitQuestion}
             >
@@ -129,6 +133,7 @@ const QnAScreen = () => {
           </View>
         </View>
       </Modal>
+      <Footer />
     </SafeAreaView>
   );
 };
@@ -136,7 +141,7 @@ const QnAScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   searchContainer: {
     padding: 16,
@@ -144,19 +149,19 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#eee",
     borderRadius: 4,
     padding: 8,
     marginBottom: 8,
   },
   searchButton: {
-    backgroundColor: '#FF00FF',
+    backgroundColor: "#FF00FF",
     padding: 12,
     borderRadius: 4,
   },
   searchButtonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 16,
   },
   qnaList: {
@@ -164,12 +169,12 @@ const styles = StyleSheet.create({
   },
   qnaItem: {
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   questionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
   },
   questionText: {
@@ -178,25 +183,25 @@ const styles = StyleSheet.create({
   },
   answerContainer: {
     padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   answerText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     lineHeight: 20,
   },
   writeButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
-    bottom: 16,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'center',
+    bottom: 130,
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#FF00FF',
+    borderColor: "#FF00FF",
   },
   writeButtonText: {
     fontSize: 14,
@@ -208,29 +213,29 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    height: '80%',
+    height: "80%",
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   titleInput: {
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#eee",
     borderRadius: 4,
     padding: 12,
     marginBottom: 16,
@@ -238,7 +243,7 @@ const styles = StyleSheet.create({
   },
   contentInput: {
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#eee",
     borderRadius: 4,
     padding: 12,
     marginBottom: 16,
@@ -246,15 +251,15 @@ const styles = StyleSheet.create({
     height: 200,
   },
   submitButton: {
-    backgroundColor: '#FF00FF',
+    backgroundColor: "#FF00FF",
     padding: 16,
     borderRadius: 4,
-    alignItems: 'center',
+    alignItems: "center",
   },
   submitButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

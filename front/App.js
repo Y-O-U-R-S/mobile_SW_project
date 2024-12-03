@@ -22,7 +22,7 @@ export default function App() {
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="QnAScreen"
+          initialRouteName="Main"
           screenOptions={{
             headerShown: false,
             animationEnabled: false,

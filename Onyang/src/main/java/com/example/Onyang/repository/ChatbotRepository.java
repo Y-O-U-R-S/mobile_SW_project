@@ -8,5 +8,4 @@ import com.example.Onyang.model.Chatbot;
 @Repository
 public interface ChatbotRepository extends JpaRepository<Chatbot, Integer>{
 
-    
 } 

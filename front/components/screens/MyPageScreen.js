@@ -15,36 +15,17 @@ const MyPageScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header title="마이페이지" />
+      <Header title="더 알아보기" />
       <View style={styles.container}>
-        <View style={styles.userSection}>
-          <Text style={styles.userName}>유창석</Text>
-          <Text style={styles.userRole}>
-            <Text style={styles.userRoleHighlight}>창업자님</Text> 환영합니다!
-          </Text>
-          <TouchableOpacity
-            style={styles.editProfileButton}
-            onPress={() => navigation.navigate("EditProfile")}
-          >
-            <Text style={styles.editProfileButtonText}>개인정보 수정</Text>
-          </TouchableOpacity>
-        </View>
 
         <View style={styles.menuSection}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem}
+            onPress={() => navigation.navigate("Notice")}
+          >
             <Text style={styles.menuText}>공지사항 / 이벤트</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>팝업스토어에 제보하기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>팝업스토어에 홍보하기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuText}>QnA</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>문의하기</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -100,8 +81,6 @@ const styles = StyleSheet.create({
   },
   menuSection: {
     marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
     paddingTop: 20,
   },
   menuItem: {
