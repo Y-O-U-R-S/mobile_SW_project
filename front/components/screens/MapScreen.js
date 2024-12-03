@@ -17,6 +17,7 @@ const MapScreen = () => {
   const mapRef = useRef(null);
   const [markers, setMarkers] = useState([]);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,23 +44,30 @@ const MapScreen = () => {
 
   const getCoordinates = async () => {
     try {
+      const response = await axios.get("http://192.168.0.74:8000/popupStore");
+      const markers = response.data;
+
       const results = await Promise.all(
         markers.map(async (marker) => {
-          const response = await axios.get(
+          const geoResponse = await axios.get(
             `https://dapi.kakao.com/v2/local/search/address.json`,
             {
               headers: {
-                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // 여기에 API 키 입력
+                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // Kakao API 키 입력
               },
               params: {
                 query: marker.address,
               },
             }
           );
-          if (response.data.documents.length > 0) {
-            const { y, x } = response.data.documents[0];
+
+          if (geoResponse.data.documents.length > 0) {
+            const { y, x } = geoResponse.data.documents[0];
             return {
-              ...marker,
+              id: marker.id,
+              title: marker.popup_Name,
+              description: marker.description,
+              address: marker.address,
               coordinate: {
                 latitude: parseFloat(y),
                 longitude: parseFloat(x),
@@ -67,23 +75,24 @@ const MapScreen = () => {
             };
           } else {
             console.warn(`No coordinates found for address: ${marker.address}`);
-            return marker;
+            return null;
           }
         })
       );
-      setCoordinates(results);
+
+      setCoordinates(results.filter((item) => item !== null));
     } catch (error) {
-      console.error("Geocoding error: ", error);
+      console.error("Error fetching popup stores or geocoding:", error);
     }
   };
 
   useEffect(() => {
+
     if (markers.length > 0) {
       getCoordinates(); // markers가 업데이트 된 후에 좌표 가져오기
     }
   }, [markers]);
 
-  // 지도 위치를 마커에 맞게 조정
   useEffect(() => {
     if (coordinates.length > 0 && mapRef.current) {
       mapRef.current.fitToCoordinates(
@@ -114,15 +123,18 @@ const MapScreen = () => {
             <Marker key={marker.id} coordinate={marker.coordinate}>
               <View style={styles.markerContainer}>
                 <View style={styles.markerBackground}>
+
                   <Image
                     source={marker.image}
                     style={styles.markerImage}
                   />
+
                   <Text style={styles.markerTitle}>{marker.title}</Text>
                 </View>
               </View>
               <Callout tooltip>
                 <View style={styles.calloutContainer}>
+
                   <Image
                     source={marker.image}
                     style={styles.calloutImage}
@@ -172,11 +184,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  markerImage: {
-    width: 100,
-    height: 60,
-    borderRadius: 8,
-  },
   markerTitle: {
     marginTop: 5,
     fontSize: 12,
@@ -188,10 +195,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#fff",
     overflow: "hidden",
-  },
-  calloutImage: {
-    width: "100%",
-    height: 120,
   },
   calloutTextContainer: {
     padding: 10,

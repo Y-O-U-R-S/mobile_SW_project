@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 
@@ -19,6 +19,9 @@ const PopUpStoreScreen = () => {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState("운영 중");
   const [searchQuery, setSearchQuery] = useState("");
+  const [popUpStores, setPopUpStores] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   const [popUpStoresRunning, setPopUpStoresRunning] = useState([]);
   const [popUpStoresUpcoming, setPopUpStoresUpcoming] = useState([]);
@@ -58,12 +61,65 @@ const PopUpStoreScreen = () => {
     fetchData();
   }, []);
 
-  const filteredRunningStores = popUpStoresRunning.filter((store) =>
-    store.title.includes(searchQuery)
-  );
 
-  const filteredUpcomingStores = popUpStoresUpcoming.filter((store) =>
-    store.title.includes(searchQuery)
+  // 상태와 D-Day 계산 함수
+  const calculateStatusAndDday = (startDateString, endDateString) => {
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+
+    if (today < startDate) {
+      const diff = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24));
+      return { status: "오픈 예정", dday: `D-${diff}` };
+    } else if (today >= startDate && today <= endDate) {
+      const diff = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+      return { status: "운영 중", dday: `D-${diff}` };
+    } else {
+      return { status: "종료됨", dday: "종료됨" };
+    }
+  };
+
+  // API 데이터 가져오기
+  const fetchPopUpStores = async () => {
+    try {
+      setLoading(true); // 로딩 상태 설정
+      const response = await axios.get("http://192.168.0.74:8000/popupStore"); // 서버 요청
+      const data = response.data;
+
+      if (Array.isArray(data)) {
+        const formattedStores = data.map((store) => {
+          const { status, dday } = calculateStatusAndDday(
+            store.start_Date,
+            store.end_Date
+          );
+          return {
+            id: store.id,
+            title: store.popup_Name,
+            address: store.address,
+            date: `${formatDate(store.start_Date)} - ${formatDate(
+              store.end_Date
+            )}`,
+            status,
+            dday,
+          };
+        });
+        setPopUpStores(formattedStores);
+      } else {
+        console.error("Unexpected data format:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching popup stores:", error.message || error);
+    } finally {
+      setLoading(false); // 로딩 종료
+    }
+  };
+
+  useEffect(() => {
+    fetchPopUpStores();
+  }, []);
+
+  // 현재 탭과 검색어를 기반으로 데이터 필터링
+  const filteredStores = popUpStores.filter(
+    (store) => store.status === activeTab && store.title.includes(searchQuery)
   );
 
 
@@ -117,6 +173,7 @@ const PopUpStoreScreen = () => {
 
       <ScrollView style={styles.container}>
         <View style={styles.cardContainer}>
+
           {activeTab === "운영 중" &&
             filteredRunningStores.map((store) => (
               <TouchableOpacity
@@ -136,6 +193,7 @@ const PopUpStoreScreen = () => {
             ))}
           {activeTab === "오픈 예정" &&
             filteredUpcomingStores.map((store) => (
+
               <TouchableOpacity
                 key={store.id}
                 style={styles.card}
@@ -143,14 +201,19 @@ const PopUpStoreScreen = () => {
                   navigation.navigate("PopUpStoreDetails", { id: store.id })
                 }
               >
+
                 <Image source={store.image} style={styles.image} />
                 <View style={styles.cardContent}>
                   <Text style={styles.storeTitle}>{store.title}</Text>
                   <Text style={styles.date}>{store.date}</Text>
-                  <Text style={styles.remaining}>{store.remainingDays}</Text>
+                  <Text style={styles.dday}>{store.dday}</Text>
+                  <Text style={styles.remaining}>{store.status}</Text>
                 </View>
               </TouchableOpacity>
-            ))}
+            ))
+          ) : (
+            <Text style={styles.noResultText}>결과가 없습니다.</Text>
+          )}
         </View>
       </ScrollView>
       <Footer />
@@ -211,12 +274,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
-  image: {
-    width: "100%",
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
   cardContent: {
     alignItems: "flex-start",
   },
@@ -229,10 +286,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
   },
+  dday: {
+    fontSize: 14,
+    color: "#007BFF",
+    fontWeight: "bold",
+  },
   remaining: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#DAA520",
+  },
+  loadingText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+  },
+  noResultText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: "#999",
   },
 });
 
