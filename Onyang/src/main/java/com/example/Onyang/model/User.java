@@ -6,14 +6,14 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "\"users\"")
+@Table(name = "\"user\"")
 @Data
 public class User {
     @Id
     private String id; 
-    private String password;
     private String name;
     private String email;
+    private String password;
     private String address;
     private String phone;
     private String birth;

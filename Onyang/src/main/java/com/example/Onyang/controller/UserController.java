@@ -54,7 +54,7 @@ public class UserController {
         if (authenticated) {
             // User authenticatedUser = userService.findById(userDto.getId());
             return ResponseEntity.ok()
-                    .body("로그인 가능." );
+                    .body("로그인 가능.");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 불가능");
         }
@@ -69,10 +69,10 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable String id) {
+    @GetMapping("/find")
+    public ResponseEntity<?> findById(@RequestParam("email") String email) {
         try {
-            User user = userService.findById(id);
+            User user = userService.findById(email);
             if (user != null) {
                 return ResponseEntity.ok(user);
             } else {
@@ -82,4 +82,5 @@ public class UserController {
             return ResponseEntity.badRequest().body("조회 실패: " + e.getMessage());
         }
     }
+
 }

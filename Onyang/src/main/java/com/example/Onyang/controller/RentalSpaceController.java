@@ -21,7 +21,7 @@ import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/clubUsage")
+@RequestMapping("/rentalSpaces")
 public class RentalSpaceController {
     @Autowired
     private RentalSpaceService rentalSpaceService;
