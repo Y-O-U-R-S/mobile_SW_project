@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+// 서비스 레이어의 컴포넌트임을 나타냄
+// 서비스 클래스 : 사용자 관련 비즈니스 로직을 구현
 @Service
 public class UserService {
 
+    // 의존성 주입하여 JPARepository를 사용하여 데이터베이스와의 상호작용
     @Autowired
     private UserRepository userRepository;
 
