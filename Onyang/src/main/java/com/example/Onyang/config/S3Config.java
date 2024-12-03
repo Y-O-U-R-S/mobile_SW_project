@@ -9,30 +9,36 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-// Spring 애플리케이션이 시작될 때 가장 먼저 로드
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Configuration
 public class S3Config {
-    // @Value 어노테이션을 사용해서 application.properties에 작성해둔 값 가져옴
-    // AWS 인증에 필요한 정보 가져옴
+
+    private static final Logger logger = LoggerFactory.getLogger(S3Config.class);
+
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;
+
     @Value("${cloud.aws.credentials.secretKey}")
     private String secretKey;
+
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    
-    // Bean으로 등록하여 Spring에서 관리할 수 있는 객체로 생성
     @Bean
     public AmazonS3 amazonS3() {
+        logger.info("Initializing Amazon S3 client with region: {}", region);
+
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-        
-        return AmazonS3ClientBuilder
-        //자격 증명, aws 리전 설정 후 AmazonS3 클라이언트 생성
+
+        AmazonS3 s3Client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
                 .build();
-    }
 
+        logger.info("Amazon S3 client initialized successfully.");
+        return s3Client;
+    }
 }

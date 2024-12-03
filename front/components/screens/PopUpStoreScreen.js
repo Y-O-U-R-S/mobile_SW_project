@@ -173,46 +173,49 @@ const PopUpStoreScreen = () => {
 
       <ScrollView style={styles.container}>
         <View style={styles.cardContainer}>
-
-          {activeTab === "운영 중" &&
-            filteredRunningStores.map((store) => (
-              <TouchableOpacity
-                key={store.id}
-                style={styles.card}
-                onPress={() =>
-                  navigation.navigate("PopUpStoreDetails", { id: store.id })
-                }
-              >
-                <Image source={store.image} style={styles.image} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.storeTitle}>{store.title}</Text>
-                  <Text style={styles.date}>{store.date}</Text>
-                  <Text style={styles.remaining}>{store.remainingDays}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          {activeTab === "오픈 예정" &&
-            filteredUpcomingStores.map((store) => (
-
-              <TouchableOpacity
-                key={store.id}
-                style={styles.card}
-                onPress={() =>
-                  navigation.navigate("PopUpStoreDetails", { id: store.id })
-                }
-              >
-
-                <Image source={store.image} style={styles.image} />
-                <View style={styles.cardContent}>
-                  <Text style={styles.storeTitle}>{store.title}</Text>
-                  <Text style={styles.date}>{store.date}</Text>
-                  <Text style={styles.dday}>{store.dday}</Text>
-                  <Text style={styles.remaining}>{store.status}</Text>
-                </View>
-              </TouchableOpacity>
-            ))
+          {activeTab === "운영 중" ? (
+            filteredRunningStores.length > 0 ? (
+              filteredRunningStores.map((store) => (
+                <TouchableOpacity
+                  key={store.id}
+                  style={styles.card}
+                  onPress={() =>
+                    navigation.navigate("PopUpStoreDetails", { id: store.id })
+                  }
+                >
+                  <Image source={store.image} style={styles.image} />
+                  <View style={styles.cardContent}>
+                    <Text style={styles.storeTitle}>{store.title}</Text>
+                    <Text style={styles.date}>{store.date}</Text>
+                    <Text style={styles.remaining}>{store.remainingDays}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.noResultText}>결과가 없습니다.</Text>
+            )
           ) : (
-            <Text style={styles.noResultText}>결과가 없습니다.</Text>
+            filteredUpcomingStores.length > 0 ? (
+              filteredUpcomingStores.map((store) => (
+                <TouchableOpacity
+                  key={store.id}
+                  style={styles.card}
+                  onPress={() =>
+                    navigation.navigate("PopUpStoreDetails", { id: store.id })
+                  }
+                >
+                  <Image source={store.image} style={styles.image} />
+                  <View style={styles.cardContent}>
+                    <Text style={styles.storeTitle}>{store.title}</Text>
+                    <Text style={styles.date}>{store.date}</Text>
+                    <Text style={styles.dday}>{store.dday}</Text>
+                    <Text style={styles.remaining}>{store.status}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.noResultText}>결과가 없습니다.</Text>
+            )
           )}
         </View>
       </ScrollView>
