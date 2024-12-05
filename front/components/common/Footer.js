@@ -2,6 +2,7 @@ import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Footer = () => {
   const navigation = useNavigation();
@@ -60,15 +61,15 @@ const Footer = () => {
         onPress={() => navigation.navigate("MyPage")}
         style={styles.footerButton}
       >
-        <Icon
-          name="account-cog-outline"
-          size={35}
+        <Ionicons 
+          name="person"
+          size={32}
           color={isActive("MyPage") ? "#4CAF50" : "#000"}
         />
         <Text
           style={[styles.footerText, isActive("MyPage") && styles.activeText]}
         >
-          더 알아보기
+          마이 페이지
         </Text>
       </TouchableOpacity>
     </View>
