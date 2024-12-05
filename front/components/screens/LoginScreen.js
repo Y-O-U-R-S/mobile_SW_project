@@ -91,7 +91,16 @@ const LoginScreen = ({ navigation }) => {
     >
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.contentContainer}>
-          <Text style={styles.subTitle}>청년들의 창업 순간을 가능하게 하는 연습장</Text>
+          <Text style={styles.subTitle}>
+            <Text style={{ color: 'black' }}>청</Text>
+            <Text style={{ color: 'white' }}>년들의 창업 </Text>
+            <Text style={{ color: 'black' }}>순</Text>
+            <Text style={{ color: 'white' }}>간을 </Text>
+            <Text style={{ color: 'black' }}>가</Text>
+            <Text style={{ color: 'white' }}>능하게 하는 </Text>
+            <Text style={{ color: 'black' }}>연</Text>
+            <Text style={{ color: 'white' }}>습장</Text>
+          </Text>
           <Text style={styles.title}>청순가련</Text>
 
           <View style={styles.formContainer}>
