@@ -15,7 +15,7 @@ public class RentalSpace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id; // 자동 증가 설정
 
     private String name;
 
@@ -35,8 +35,4 @@ public class RentalSpace {
     private int distanceFromOnyangStation;
 
     private String price;
-
-    public void setDistance_From_Onyang_Station(int distance_From_Onyang_Station) {
-        throw new UnsupportedOperationException("Unimplemented method 'setDistance_From_Onyang_Station'");
-    }
 }

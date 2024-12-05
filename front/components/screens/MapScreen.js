@@ -9,19 +9,19 @@ import {
 } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import axios from "axios";
-import Header from "../common/Header";
 import Footer from "../common/Footer";
+import { useBaseUrl } from "../../contexts/BaseUrlContext";
 
 const MapScreen = () => {
   const [coordinates, setCoordinates] = useState([]);
   const mapRef = useRef(null);
   const [markers, setMarkers] = useState([]);
-
-
+  const baseUrl = useBaseUrl();
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://10.20.33.5:8000/popupStore');
+        const response = await axios.get(`${baseUrl}/popupStore`);
         console.log(response.data);
         
         // 서버에서 가져온 데이터를 markers 배열로 변환
@@ -44,30 +44,23 @@ const MapScreen = () => {
 
   const getCoordinates = async () => {
     try {
-      const response = await axios.get("http://192.168.0.74:8000/popupStore");
-      const markers = response.data;
-
       const results = await Promise.all(
         markers.map(async (marker) => {
-          const geoResponse = await axios.get(
+          const response = await axios.get(
             `https://dapi.kakao.com/v2/local/search/address.json`,
             {
               headers: {
-                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // Kakao API 키 입력
+                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // 여기에 API 키 입력
               },
               params: {
                 query: marker.address,
               },
             }
           );
-
-          if (geoResponse.data.documents.length > 0) {
-            const { y, x } = geoResponse.data.documents[0];
+          if (response.data.documents.length > 0) {
+            const { y, x } = response.data.documents[0];
             return {
-              id: marker.id,
-              title: marker.popup_Name,
-              description: marker.description,
-              address: marker.address,
+              ...marker,
               coordinate: {
                 latitude: parseFloat(y),
                 longitude: parseFloat(x),
@@ -75,24 +68,23 @@ const MapScreen = () => {
             };
           } else {
             console.warn(`No coordinates found for address: ${marker.address}`);
-            return null;
+            return marker;
           }
         })
       );
-
-      setCoordinates(results.filter((item) => item !== null));
+      setCoordinates(results);
     } catch (error) {
-      console.error("Error fetching popup stores or geocoding:", error);
+      console.error("Geocoding error: ", error);
     }
   };
 
   useEffect(() => {
-
     if (markers.length > 0) {
       getCoordinates(); // markers가 업데이트 된 후에 좌표 가져오기
     }
   }, [markers]);
 
+  // 지도 위치를 마커에 맞게 조정
   useEffect(() => {
     if (coordinates.length > 0 && mapRef.current) {
       mapRef.current.fitToCoordinates(
@@ -106,8 +98,7 @@ const MapScreen = () => {
   }, [coordinates]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="지도" />
+    <View style={styles.container}>
       <SafeAreaView style={styles.mapContainer}>
         <MapView
           ref={mapRef}
@@ -123,18 +114,15 @@ const MapScreen = () => {
             <Marker key={marker.id} coordinate={marker.coordinate}>
               <View style={styles.markerContainer}>
                 <View style={styles.markerBackground}>
-
                   <Image
                     source={marker.image}
                     style={styles.markerImage}
                   />
-
                   <Text style={styles.markerTitle}>{marker.title}</Text>
                 </View>
               </View>
               <Callout tooltip>
                 <View style={styles.calloutContainer}>
-
                   <Image
                     source={marker.image}
                     style={styles.calloutImage}
@@ -153,7 +141,7 @@ const MapScreen = () => {
         </MapView>
       </SafeAreaView>
       <Footer />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -184,6 +172,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  markerImage: {
+    width: 100,
+    height: 60,
+    borderRadius: 8,
+  },
   markerTitle: {
     marginTop: 5,
     fontSize: 12,
@@ -195,6 +188,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#fff",
     overflow: "hidden",
+  },
+  calloutImage: {
+    width: "100%",
+    height: 120,
   },
   calloutTextContainer: {
     padding: 10,

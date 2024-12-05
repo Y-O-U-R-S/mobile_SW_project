@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,22 +8,21 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-
-import Header from "../common/Header";
-import Footer from "../common/StartupFooter";
+import { useBaseUrl } from "../../contexts/BaseUrlContext";
+import Footer from "../common/Footer";
 
 const NoticeScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const baseUrl = useBaseUrl();
 
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const response = await fetch("http://192.168.0.74:8000/notice");
+        const response = await fetch(`${baseUrl}/notice`);
         if (!response.ok) {
           throw new Error("Failed to fetch notices");
         }
@@ -37,7 +36,11 @@ const NoticeScreen = () => {
     };
 
     fetchNotices();
-  }, []);
+  }, [baseUrl]);
+
+  const filteredNotices = notices.filter(notice =>
+    notice.title.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const QnAItem = ({ notice }) => {
     const [expanded, setExpanded] = useState(false);
@@ -58,7 +61,6 @@ const NoticeScreen = () => {
         {expanded && (
           <View style={styles.answerContainer}>
             <Text style={styles.answerText}>{notice.detail}</Text>
-            
           </View>
         )}
       </View>
@@ -66,8 +68,7 @@ const NoticeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="공지사항" />
+    <View style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -83,14 +84,14 @@ const NoticeScreen = () => {
       <ScrollView style={styles.qnaList}>
         {loading ? (
           <ActivityIndicator size="large" color="#FF00FF" />
-        ) : notices.length > 0 ? (
-          notices.map((notice) => <QnAItem key={notice.id} notice={notice} />)
+        ) : filteredNotices.length > 0 ? (
+          filteredNotices.map((notice) => <QnAItem key={notice.id} notice={notice} />)
         ) : (
           <Text style={styles.noData}>등록된 공지사항이 없습니다.</Text>
         )}
       </ScrollView>
       <Footer />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -146,22 +147,10 @@ const styles = StyleSheet.create({
     color: "#666",
     lineHeight: 20,
   },
-  writeButton: {
-    position: "absolute",
-    right: 16,
-    bottom: 130,
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#FF00FF",
-  },
-  writeButtonText: {
-    fontSize: 14,
-    marginRight: 4,
+  noData: {
+    textAlign: 'center',
+    padding: 20,
+    color: '#999',
   },
 });
 

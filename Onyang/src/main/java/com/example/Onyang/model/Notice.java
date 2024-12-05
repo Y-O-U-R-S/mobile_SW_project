@@ -15,11 +15,10 @@ import lombok.Data;
 public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //식별번호
-    
-    private String title; //공지사항 제목
-    private String detail; //공지사항 내용
-    private LocalDateTime date; //날짜
-    
+    private int id; // 식별번호
+
+    private String title; // 공지사항 제목
+    private String detail; // 공지사항 내용
+    private LocalDateTime date; // 날짜
 
 }

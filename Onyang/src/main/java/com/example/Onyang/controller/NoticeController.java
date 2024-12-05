@@ -3,6 +3,7 @@ package com.example.Onyang.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,10 +22,10 @@ import com.example.Onyang.service.NoticeService;
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
-    
+
     @Autowired
     private NoticeService noticeService;
-    
+
     @PostMapping
     public ResponseEntity<?> addNotice(@RequestBody Notice notice) {
         try {
@@ -49,7 +50,6 @@ public class NoticeController {
         }
     }
 
-
     @GetMapping
     public ResponseEntity<List<Notice>> getAllNotices() {
         try {
@@ -61,21 +61,21 @@ public class NoticeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateNotice(@PathVariable int id, @RequestBody Notice notice) {
+    public ResponseEntity<?> updateNotice(@PathVariable("id") int id, @RequestBody Notice notice) {
         try {
-            Notice updateNotice = noticeService.updateNotice(id, notice);
-            if (updateNotice != null) {
-                return ResponseEntity.ok(updateNotice);
+            Notice updatedNotice = noticeService.updateNotice(id, notice);
+            if (updatedNotice != null) {
+                return ResponseEntity.ok(updatedNotice);
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notice not found");
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("수정 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Update failed: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNotice(@PathVariable int id) {
+    public ResponseEntity<?> deleteNotice(@PathVariable("id") int id) {
         try {
             noticeService.deleteNoticeById(id);
             return ResponseEntity.ok().body("삭제 성공");

@@ -23,7 +23,7 @@ import com.example.Onyang.service.S3ImageService;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@CrossOrigin(origins = "https://localhost:8081")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/popupStore")
 public class PopupStoreController {
@@ -65,7 +65,7 @@ public class PopupStoreController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable int id) {
+    public ResponseEntity<?> findById(@PathVariable("id") int id) {
         try {
             PopupStore popupStore = popupStoreService.findById(id);
             if (popupStore != null) {

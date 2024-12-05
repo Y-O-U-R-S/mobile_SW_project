@@ -40,13 +40,17 @@ public class NoticeService {
     }
 
     public Notice updateNotice(int id, Notice notice) {
-        Optional<Notice> existingNotice = noticeRepository.findById(id);
-        if (existingNotice.isPresent()) {
-            Notice updatedNotice = existingNotice.get();
-            updatedNotice.setId(notice.getId());
-            updatedNotice.setTitle(notice.getTitle());
-            updatedNotice.setDetail(notice.getDetail());
-            return noticeRepository.save(updatedNotice);
+        Optional<Notice> existingNoticeOptional = noticeRepository.findById(id);
+
+        if (existingNoticeOptional.isPresent()) {
+            Notice existingNotice = existingNoticeOptional.get();
+
+            // ID는 변경하지 않음
+            existingNotice.setTitle(notice.getTitle());
+            existingNotice.setDetail(notice.getDetail());
+            existingNotice.setDate(LocalDateTime.now());
+
+            return noticeRepository.save(existingNotice);
         } else {
             return null;
         }

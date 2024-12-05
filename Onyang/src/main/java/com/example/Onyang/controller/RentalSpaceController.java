@@ -33,33 +33,36 @@ public class RentalSpaceController {
     @Autowired
     private S3ImageService s3ImageService;
 
-    // 값 넣기
     @PostMapping
-    public ResponseEntity<?> addRentalSpace(@RequestParam("name") String _name,
-            @RequestParam("area") float area,
+    public ResponseEntity<?> addRentalSpace(
+            @RequestParam("name") String name,
+            @RequestParam("area") Float area,
             @RequestParam("price") String price,
-            @RequestParam("contact_Number") String contact_Number,
+            @RequestParam("contact_Number") String contactNumber,
             @RequestParam("address") String address,
             @RequestParam("description") String description,
-            @RequestParam("imageUrl") MultipartFile _imageUrl,
-            @RequestParam("distance_From_Onyang_Station") int distance_From_Onyang_Station
-            ) {
+            @RequestParam("distance_From_Onyang_Station") int distanceFromOnyangStation,
+            @RequestParam("imageUrl") MultipartFile imageUrl) {
         try {
-            String imageUrl = s3ImageService.upload(_imageUrl);
+            // S3에 이미지 업로드
+            String uploadedImageUrl = s3ImageService.upload(imageUrl);
 
+            // RentalSpace 엔티티 생성
             RentalSpace rentalSpace = new RentalSpace();
-            rentalSpace.setName(_name);
+            rentalSpace.setName(name);
             rentalSpace.setArea(area);
             rentalSpace.setPrice(price);
-            rentalSpace.setContactNumber(contact_Number);
-            rentalSpace.setImageUrl(imageUrl);
-            rentalSpace.setDescription(description);
+            rentalSpace.setContactNumber(contactNumber);
             rentalSpace.setAddress(address);
-            rentalSpace.setDistance_From_Onyang_Station(distance_From_Onyang_Station);
-            RentalSpace addRentalSpace = rentalSpaceService.addSpace(rentalSpace);
-            return ResponseEntity.ok(addRentalSpace);
+            rentalSpace.setDescription(description);
+            rentalSpace.setDistanceFromOnyangStation(distanceFromOnyangStation);
+            rentalSpace.setImageUrl(uploadedImageUrl);
+
+            // DB에 저장
+            RentalSpace savedRentalSpace = rentalSpaceService.addSpace(rentalSpace);
+            return ResponseEntity.ok(savedRentalSpace);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("실패: " + e.getMessage());
+            return ResponseEntity.badRequest().body("등록 실패: " + e.getMessage());
         }
     }
 
@@ -77,13 +80,13 @@ public class RentalSpaceController {
         }
     }
 
-    // 값 전부 가져오기
+    // 모든 공간 정보 가져오기
     @GetMapping
-    public List<RentalSpace> getAllUsages() {
+    public List<RentalSpace> getAllSpaces() {
         return rentalSpaceService.getAllSpaces();
     }
 
-    // 값 삭제
+    // 공간 삭제
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSpace(@PathVariable int id) {
@@ -92,5 +95,4 @@ public class RentalSpaceController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 불가");
         }
     }
-
 }

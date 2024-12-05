@@ -1,24 +1,25 @@
-import React, {useState, useEffect} from "react";
-import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView } from "react-native";
-import Header from "../common/Header";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, Button, TouchableOpacity } from "react-native";
 import Footer from "../common/Footer";
 import axios from "axios";
+import { useBaseUrl } from "../../contexts/BaseUrlContext";
+import { useNavigation } from "@react-navigation/native";
 
 const PopUpStoreDetailsScreen = ({ route }) => {
   const { id } = route.params;
   const [store, setStore] = useState(null);
-
+  const baseUrl = useBaseUrl();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchStoreDetails = async () => {
       try {
-        const response = await axios.get(`http://10.20.33.5:8000/popupStore/${id}`);
+        const response = await axios.get(`${baseUrl}/popupStore/${id}`);
         setStore(response.data);
       } catch (error) {
         console.error("상세 정보 조회 실패: ", error);
       }
     };
-
     fetchStoreDetails();
   }, [id]);
 
@@ -47,7 +48,6 @@ const PopUpStoreDetailsScreen = ({ route }) => {
   if (!store) {
     return (
       <SafeAreaView style={styles.container}>
-        <Header title="팝업 디테일 페이지" />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>로딩 중...</Text>
         </View>
@@ -58,17 +58,17 @@ const PopUpStoreDetailsScreen = ({ route }) => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="팝업 디테일 페이지" />
+    <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.contentContainer}>
-          <Image 
-            source={{ uri: store.image }} 
+          <Image
+            source={{ uri: store.image }}
             style={styles.image}
             resizeMode="cover"
           />
           <View style={styles.infoContainer}>
-            <Text style={{...styles.status,
+            <Text style={{
+              ...styles.status,
               color: getStatusColor(store.status)
             }}>
               {store.status}
@@ -81,10 +81,13 @@ const PopUpStoreDetailsScreen = ({ route }) => {
             <Text style={styles.descriptionTitle}>상세 설명</Text>
             <Text style={styles.description}>{store.description}</Text>
           </View>
+          <TouchableOpacity onPress={() => navigation.navigate("PopUpStore")} >
+            <Text style={styles.backText}>&lt;- 다른 팝업 스토어 보러가기</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <Footer />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -146,6 +149,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#444',
-  },
+  }, backText: {
+    fontWeight: 'bold',
+    fontSize: '19',
+    marginLeft:'10',
+    marginTop:'50'
+  }
 });
 export default PopUpStoreDetailsScreen;

@@ -11,7 +11,6 @@ import lombok.Data;
 // 이 엔티티가 매피될 테이블의 이름을 지정
 @Table(name = "\"user\"")
 // Lombok이 제공하는 어노테이션
-
 @Data
 public class User {
     // 이 필드가 엔티티의 기본 키임을 나타냄(고유 식별자)

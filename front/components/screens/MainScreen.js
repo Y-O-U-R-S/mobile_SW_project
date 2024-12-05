@@ -9,19 +9,21 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Header from "../common/Header";
 import Footer from "../common/Footer";
 import axios from 'axios'
+import { useBaseUrl } from "../../contexts/BaseUrlContext";
 
 const MainScreen = () => {
   const navigation = useNavigation();
   const [popUps, setPopUps] = useState([]);
+  const baseUrl = useBaseUrl();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://10.20.32.148:8000/popupStore');
+        const response = await axios.get(`${baseUrl}/popupStore`);
         console.log(response.data);
+        setPopUps([]);
         setPopUps(response.data);
       } catch (error) {
         console.error(error); // 에러 처리
@@ -38,8 +40,7 @@ const MainScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="청순가련" />
+    <View style={styles.container}>
 
       <ScrollView
         horizontal
@@ -60,7 +61,7 @@ const MainScreen = () => {
             </View>
             <View style={styles.bannerSlide}>
               <Image
-                source={{ uri: popUps[0].image }} // 첫 번째 팝업 이미지 재사용
+                source={{ uri: popUps[2].image }} // 첫 번째 팝업 이미지 재사용
                 style={styles.bannerImage}
               />
               <Text style={styles.bannerText}>지금 가야할 팝업!</Text>
@@ -69,14 +70,17 @@ const MainScreen = () => {
         )}
       </ScrollView>
 
-      <Text style={styles.sectionHeader}>🔥 뜨끈 뜨끈 신상 팝업!</Text>
+      <Text style={styles.sectionHeader}>🔥 핫한 팝업스토어 추천!</Text>
       <ScrollView
         horizontal
         contentContainerStyle={styles.popUpList}
         showsHorizontalScrollIndicator={false}>
         <View style={styles.popUpList}>
           {popUps.map((popUp, index) => ( // 데이터 맵핑
-            <TouchableOpacity key={index} style={styles.popUpCard}>
+            <TouchableOpacity key={index} style={styles.popUpCard}
+              onPress={() =>
+                navigation.navigate("PopUpStoreDetails", { id: popUp.id })
+              }>
               <Image
                 source={{ uri: popUp.image }} // 이미지 URL을 서버에서 가져온 값으로 설정
                 style={styles.popUpImage}
@@ -89,7 +93,7 @@ const MainScreen = () => {
       </ScrollView>
 
       <Footer />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   bannerSlide: {
-    width: 400,
+    width: 375,
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
@@ -128,7 +132,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   sectionHeader: {
-    
+
     fontSize: 18,
     fontWeight: "bold",
     marginVertical: 10,

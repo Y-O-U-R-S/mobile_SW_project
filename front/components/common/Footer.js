@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
+    marginBottom:'5'
   },
   footerButton: {
     alignItems: "center",
