@@ -128,10 +128,6 @@ const LoginScreen = ({ navigation }) => {
 
             <View style={styles.bottomLinks}>
               <TouchableOpacity>
-                <Text style={styles.linkText}>ID찾기</Text>
-              </TouchableOpacity>
-              <Text style={styles.linkSeparator}>|</Text>
-              <TouchableOpacity>
                 <Text style={styles.linkText}>비밀번호 찾기</Text>
               </TouchableOpacity>
               <Text style={styles.linkSeparator}>|</Text>
@@ -213,9 +209,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   bottomLinks: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
+    marginRight:10,
     marginTop: 20,
   },
   linkText: {

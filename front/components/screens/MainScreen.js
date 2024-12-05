@@ -35,11 +35,10 @@ const MainScreen = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
-    return `${year}년 ${month}월 ${day}일`;
+    return `${month}월 ${day}일`;
   };
 
   const calculateDday = (startDate, endDate, status) => {
@@ -95,7 +94,7 @@ const MainScreen = () => {
 
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>🔥 뜨끈 뜨끈 신상 팝업 🔥</Text>
-          <View style={styles.gridContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
             {popUps
               .filter(popup => popup.status === "운영중")
               .sort((a, b) => calculateRemainingDays(b.end_Date) - calculateRemainingDays(a.end_Date)) // 종료일이 가장 많이 남은 순으로 정렬
@@ -116,17 +115,19 @@ const MainScreen = () => {
                   <Text style={styles.gridTitle} numberOfLines={2}>
                     {popup.popup_Name}
                   </Text>
-                  <Text style={styles.dateText}>
-                    {formatDate(popup.start_Date)} ~ {formatDate(popup.end_Date)}
-                  </Text>
+                  <View style={styles.dateContainer}>
+                    <Text style={styles.dateText}>
+                      {formatDate(popup.start_Date)} ~ {formatDate(popup.end_Date)}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               ))}
-          </View>
+          </ScrollView>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>🤩 오픈 예정 팝업 미리보기!!</Text>
-          <View style={styles.gridContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
             {popUps
               .filter(popup => popup.status === "오픈 예정")
               .sort((a, b) => calculateRemainingDays(a.start_Date) - calculateRemainingDays(b.start_Date)) // 오픈 예정일이 얼마 남지 않은 순으로 정렬
@@ -147,12 +148,14 @@ const MainScreen = () => {
                   <Text style={styles.gridTitle} numberOfLines={2}>
                     {popup.popup_Name}
                   </Text>
-                  <Text style={styles.dateText}>
-                    {formatDate(popup.start_Date)} ~ {formatDate(popup.end_Date)}
-                  </Text>
+                  <View style={styles.dateContainer}>
+                    <Text style={styles.dateText}>
+                      {formatDate(popup.start_Date)} ~ {formatDate(popup.end_Date)}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               ))}
-          </View>
+          </ScrollView>
         </View>
       </ScrollView>
       <Footer />
@@ -175,6 +178,8 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: '100%',
+  }, horizontalScroll: {
+    paddingVertical: 10,
   },
   bannerOverlay: {
     position: 'absolute',
@@ -205,6 +210,7 @@ const styles = StyleSheet.create({
   gridItem: {
     width: (width - 45) / 2,
     marginBottom: 20,
+    marginRight: 15,
   },
   imageContainer: {
     position: 'relative',
@@ -213,6 +219,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     borderRadius: 10,
+  }, dateContainer: {
+    flexDirection: 'row',
   },
   ddayContainer: {
     position: 'absolute',
@@ -238,7 +246,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   dateText: {
-    fontSize: 14,
+    fontSize: 10,
     color: '#666',
   },
 });

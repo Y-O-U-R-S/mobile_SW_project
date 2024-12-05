@@ -6,10 +6,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Footer = () => {
   const navigation = useNavigation();
-  const route = useRoute(); // 현재 활성화된 화면의 정보 가져오기
-
+  const route = useRoute(); 
+  
   const isActive = (screenName) => route.name === screenName;
-
+  console.log(route.name)
   return (
     <View style={styles.footer}>
       <TouchableOpacity
@@ -46,7 +46,7 @@ const Footer = () => {
         onPress={() => navigation.navigate("PopUpStore")}
         style={styles.footerButton}
       >
-        <Text style={styles.popText}>POP</Text>
+        <Text style={[styles.popText, isActive("PopUpStore") && styles.activeText]}>POP</Text>
         <Text
           style={[
             styles.footerText,
