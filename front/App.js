@@ -41,7 +41,7 @@ export default function App() {
             screenOptions={({ route }) => ({
               header: () => {
                 // Login과 SignUp 화면에서는 헤더를 숨김
-                if (route.name === "Login" || route.name === "SignUp") {
+                if (route.name === "Login" || route.name === "SignUp" || route.name === "Main") {
                   return null;
                 }
                 // 나머지 화면에서는 커스텀 헤더를 보여줌

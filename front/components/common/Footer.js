@@ -45,11 +45,7 @@ const Footer = () => {
         onPress={() => navigation.navigate("PopUpStore")}
         style={styles.footerButton}
       >
-        <Icon
-          name="store"
-          size={35}
-          color={isActive("PopUpStore") ? "#4CAF50" : "#000"}
-        />
+        <Text style={styles.popText}>POP</Text>
         <Text
           style={[
             styles.footerText,
@@ -89,7 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
-    marginBottom:'5'
+    marginBottom: '5'
   },
   footerButton: {
     alignItems: "center",
@@ -104,7 +100,10 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: "#4CAF50",
-  },
+  }, popText: {
+    fontSize: 26,
+    fontWeight: 'bold'
+  }
 });
 
 export default Footer;
