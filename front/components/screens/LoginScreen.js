@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { UserContext } from "../../contexts/UserContext";
 import { useBaseUrl } from "../../contexts/BaseUrlContext";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const LoginScreen = ({ navigation }) => {
   const [id, setId] = useState("");
@@ -83,79 +85,160 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>청순가련</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="ID"
-        value={id}
-        onChangeText={setId}
-        autoCapitalize="none"
-        placeholderTextColor="#aaa"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholderTextColor="#aaa"
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Main")}>
-        <Text style={styles.buttonText}>로그인 없이 사용하기</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-        <Text style={styles.linkText}>회원가입</Text>
-      </TouchableOpacity>
-    </View>
+    <LinearGradient
+      colors={['#B721FF', '#FF69B4']}
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.subTitle}>청년들의 창업 순간을 가능하게 하는 연습장</Text>
+          <Text style={styles.title}>청순가련</Text>
+
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>ID</Text>
+            <TextInput
+              style={styles.input}
+              value={id}
+              onChangeText={setId}
+              autoCapitalize="none"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+            />
+
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+            />
+
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.loginButtonText}>LOGIN</Text>
+            </TouchableOpacity>
+
+            <View style={styles.bottomLinks}>
+              <TouchableOpacity>
+                <Text style={styles.linkText}>ID찾기</Text>
+              </TouchableOpacity>
+              <Text style={styles.linkSeparator}>|</Text>
+              <TouchableOpacity>
+                <Text style={styles.linkText}>비밀번호 찾기</Text>
+              </TouchableOpacity>
+              <Text style={styles.linkSeparator}>|</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                <Text style={styles.linkText}>회원가입</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.divider} />
+          </View>
+
+
+          <TouchableOpacity
+            style={styles.skipLoginButton}
+            onPress={() => navigation.navigate("Main")}
+          >
+            <Text style={styles.skipLoginText}>로그인 없이 사용하기</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FF6B6B",
+  },
+  safeArea: {
+    flex: 1,
+  },
+  contentContainer: {
+    flex: 1,
     padding: 20,
+    paddingTop: 40,
+  },
+  subTitle: {
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#fff",
+    color: '#fff',
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 40,
   },
+  formContainer: {
+    width: '100%',
+  },
+  label: {
+    color: '#fff',
+    fontSize: 16,
+    marginBottom: 8,
+  },
   input: {
-    width: "80%",
-    height: 50,
-    borderColor: "#fff",
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    marginBottom: 15,
-    color: "#fff",
+    backgroundColor: '#fff',
+    height: 45,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 20,
+    color: '#000',
   },
-  button: {
-    backgroundColor: "#FFCC00",
-    width: "80%",
-    height: 50,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
+  loginButton: {
+    backgroundColor: '#8A2BE2',
+    height: 45,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
   },
-  buttonText: {
-    color: "#000",
-    fontSize: 18,
-    fontWeight: "bold",
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  bottomLinks: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
   },
   linkText: {
-    color: "#fff",
-    marginTop: 10,
-    textDecorationLine: "underline",
+    color: '#fff',
+    fontSize: 12,
+  },
+  linkSeparator: {
+    color: '#fff',
+    marginHorizontal: 8,
+    fontSize: 12,
+  }, dividerContainer: {
+    paddingHorizontal: 20,
+    marginTop: 100,
+    marginBottom: 20,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#fff',
+    width: '100%',
+  },
+  skipLoginButton: {
+    backgroundColor: '#FFCC00',
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 20,
+  },
+  skipLoginText: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
