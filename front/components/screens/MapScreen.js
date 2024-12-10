@@ -17,13 +17,12 @@ const MapScreen = () => {
   const mapRef = useRef(null);
   const [markers, setMarkers] = useState([]);
   const baseUrl = useBaseUrl();
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${baseUrl}/popupStore`);
         console.log(response.data);
-        
+
         // 서버에서 가져온 데이터를 markers 배열로 변환
         const newMarkers = response.data.map(item => ({
           id: item.id,
@@ -96,6 +95,43 @@ const MapScreen = () => {
       );
     }
   }, [coordinates]);
+  /* 
+   길찾기 코드 -> callout 위에 TouchableOpacity가 안눌려서 PopupStoreDetailScreen으로 길찾기 이동
+    useEffect(() => {
+      const getCurrentLocation = async () => {
+        try {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            Alert.alert("권한 필요", "위치 정보를 사용하려면 권한이 필요합니다.");
+            return;
+          }
+  
+          const location = await Location.getCurrentPositionAsync({});
+          setCurrentLocation(location.coords);
+        } catch (error) {
+          console.error("Error getting location: ", error);
+        }
+      };
+  
+      getCurrentLocation();
+    }, []);
+  
+    const handleNavigation = (address) => {
+      if (!currentLocation) {
+        Alert.alert("위치 정보 없음", "현재 위치를 가져올 수 없습니다.");
+        return;
+      }
+  
+      const encodedAddress = encodeURIComponent(address);
+      const { latitude, longitude } = currentLocation;
+      const kakaoMapUrl = `https://map.kakao.com/link/to/${encodedAddress},${latitude},${longitude}`;
+  
+      console.log(kakaoMapUrl);
+  
+      Linking.openURL(kakaoMapUrl)
+        .catch((err) => console.error("Failed to open URL: ", err));
+    };
+  */
 
   return (
     <View style={styles.container}>
@@ -186,7 +222,7 @@ const styles = StyleSheet.create({
   calloutContainer: {
     width: 250,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: '#ffffff',
     overflow: "hidden",
   },
   calloutImage: {

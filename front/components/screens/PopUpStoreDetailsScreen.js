@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, Button, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, TouchableOpacity, Linking, Alert } from "react-native";
 import Footer from "../common/Footer";
 import axios from "axios";
 import { useBaseUrl } from "../../contexts/BaseUrlContext";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from 'expo-location'; // 현재 위치 가져오기
 
 const PopUpStoreDetailsScreen = ({ route }) => {
   const { id } = route.params;
   const [store, setStore] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null); // 현재 위치 상태 추가
   const baseUrl = useBaseUrl();
   const navigation = useNavigation();
 
@@ -22,6 +24,25 @@ const PopUpStoreDetailsScreen = ({ route }) => {
     };
     fetchStoreDetails();
   }, [id]);
+
+  useEffect(() => {
+    const getCurrentLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert("권한 필요", "위치 정보를 사용하려면 권한이 필요합니다.");
+          return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+        setCurrentLocation(location.coords);
+      } catch (error) {
+        console.error("Error getting location: ", error);
+      }
+    };
+
+    getCurrentLocation();
+  }, []);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -45,6 +66,20 @@ const PopUpStoreDetailsScreen = ({ route }) => {
     }
   };
 
+  const handleNavigation = () => {
+    if (!currentLocation) {
+      Alert.alert("위치 정보 없음", "현재 위치를 가져올 수 없습니다.");
+      return;
+    }
+
+    const { latitude, longitude } = currentLocation;
+    const encodedAddress = encodeURIComponent(store.address); // 주소 인코딩
+    const kakaoMapUrl = `https://map.kakao.com/link/to/${encodedAddress},${latitude},${longitude}`;
+
+    Linking.openURL(kakaoMapUrl)
+      .catch((err) => console.error("Failed to open URL: ", err));
+  };
+
   if (!store) {
     return (
       <SafeAreaView style={styles.container}>
@@ -55,7 +90,6 @@ const PopUpStoreDetailsScreen = ({ route }) => {
       </SafeAreaView>
     );
   }
-
 
   return (
     <View style={styles.container}>
@@ -80,6 +114,10 @@ const PopUpStoreDetailsScreen = ({ route }) => {
             <Text style={styles.address}>{store.address}</Text>
             <Text style={styles.descriptionTitle}>상세 설명</Text>
             <Text style={styles.description}>{store.description}</Text>
+
+            <TouchableOpacity style={styles.mapButton} onPress={handleNavigation}>
+              <Text style={styles.mapButtonText}>카카오맵으로 길 찾기 🚗</Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("PopUpStore")} >
             <Text style={styles.backText}>&lt;- 다른 팝업 스토어 보러가기</Text>
@@ -149,11 +187,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#444',
-  }, backText: {
+  },
+  backText: {
     fontWeight: 'bold',
-    fontSize: '19',
-    marginLeft:'10',
-    marginTop:'50'
-  }
+    fontSize: 19,
+    marginLeft: 10,
+  },
+  mapButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 15,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 20,
+    marginVertical: 20,
+    elevation: 3,
+  },
+  mapButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });
+
 export default PopUpStoreDetailsScreen;

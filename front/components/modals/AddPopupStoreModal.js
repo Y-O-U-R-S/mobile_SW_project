@@ -36,7 +36,10 @@ const AddPopupStoreModal = ({
       [field]: value,
     }));
   };
-
+  const handleClose = () => {
+    setFormData(initialFormData); 
+    onClose();
+  };
   const handleSelectImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -60,20 +63,17 @@ const AddPopupStoreModal = ({
     }
   };
 
+  const validateForm = () => {
+    const { popup_name, address, status, start_date, end_date, description, image } = formData;
+    if (!popup_name || !address || !status || !start_date || !end_date || !description || !image) {
+      Alert.alert("오류", "모든 필수 입력값을 입력해주세요.");
+      return false;
+    }
+    return true;
+  };
 
   const handleRegisterSpace = async () => {
-    if (
-      !formData.popup_name ||
-      !formData.address ||
-      !formData.status ||
-      !formData.start_date ||
-      !formData.end_date ||
-      !formData.description ||
-      !formData.image
-    ) {
-      Alert.alert("오류", "필수 입력값을 입력해주세요.");
-      return;
-    }
+    if (!validateForm()) return; // 유효성 검사
 
     const formatDateTime = (dateString) => {
       const date = new Date(dateString);
@@ -133,7 +133,7 @@ const AddPopupStoreModal = ({
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>팝업 스토어 등록</Text>
-            <TouchableOpacity onPress={onClose}>
+            <TouchableOpacity onPress={handleClose}>
               <Icon name="close" size={24} color="#000" />
             </TouchableOpacity>
           </View>
@@ -196,7 +196,7 @@ const AddPopupStoreModal = ({
           >
             <Text style={styles.saveButtonText}>등록</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+          <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
             <Text style={styles.cancelButtonText}>취소</Text>
           </TouchableOpacity>
         </View>
@@ -204,7 +204,6 @@ const AddPopupStoreModal = ({
     </Modal>
   );
 };
-
 
 const styles = StyleSheet.create({
   modalContainer: {
