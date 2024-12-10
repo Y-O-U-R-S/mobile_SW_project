@@ -50,7 +50,7 @@ const MapScreen = () => {
             `https://dapi.kakao.com/v2/local/search/address.json`,
             {
               headers: {
-                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`, // 여기에 API 키 입력
+                Authorization: `KakaoAK 6a5618b5907079f2ecf86363b3e26637`,
               },
               params: {
                 query: marker.address,

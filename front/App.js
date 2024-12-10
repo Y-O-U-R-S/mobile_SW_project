@@ -11,6 +11,8 @@ import MyPageScreen from "./components/screens/MyPageScreen";
 import LoginScreen from "./components/screens/LoginScreen";
 import SignUpScreen from "./components/screens/SignUpScreen";
 import { UserProvider } from "./contexts/UserContext";
+import CheckIdScreen from "./components/screens/CheckIdScreen";
+import ResetPassword from "./components/screens/ResetPassword";
 
 const Stack = createStackNavigator();
 
@@ -40,11 +42,11 @@ export default function App() {
             initialRouteName="Login"
             screenOptions={({ route }) => ({
               header: () => {
-                // Login과 SignUp 화면에서는 헤더를 숨김
-                if (route.name === "Login" || route.name === "SignUp" || route.name === "Main") {
+                if (route.name === "Login" || route.name === "SignUp" || route.name === "Main"
+                  || route.name === "CheckIdScreen" || route.name === "ResetPassword"
+                ) {
                   return null;
                 }
-                // 나머지 화면에서는 커스텀 헤더를 보여줌
                 return <SafeAreaView><CustomHeader title={screenTitles[route.name] || route.name} /></SafeAreaView>;
               },
               headerMode: 'screen',
@@ -52,9 +54,10 @@ export default function App() {
               gestureEnabled: false // 스와이프로 뒤로가기 비활성화
             })}
           >
-            
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="CheckIdScreen" component={CheckIdScreen} />
+            <Stack.Screen name="ResetPassword" component={ResetPassword} />
             <Stack.Screen name="Main" component={MainScreen} />
             <Stack.Screen name="PopUpStore" component={PopUpStoreScreen} />
             <Stack.Screen name="MyPage" component={MyPageScreen} />

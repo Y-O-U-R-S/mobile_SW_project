@@ -127,7 +127,7 @@ const LoginScreen = ({ navigation }) => {
             </TouchableOpacity>
 
             <View style={styles.bottomLinks}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("CheckIdScreen")}>
                 <Text style={styles.linkText}>비밀번호 찾기</Text>
               </TouchableOpacity>
               <Text style={styles.linkSeparator}>|</Text>
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   bottomLinks: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
-    marginRight:10,
+    marginRight: 10,
     marginTop: 20,
   },
   linkText: {

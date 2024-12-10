@@ -68,4 +68,25 @@ public class UserService {
         }
         return null;
     }
+
+    // 이름과 이메일로 사용자 인증(비밀번호 찾기)
+    public User findByEmailAndName(String email, String name) {
+        Optional<User> user = userRepository.findById(email);
+        if (user.isPresent() && user.get().getName().equals(name)) {
+            return user.get();
+        }
+        return null;
+    }
+
+    // 비밀번호 재설정(비밀번호 찾기)
+    public boolean resetPassword(String email, String newPassword) {
+        Optional<User> user = userRepository.findById(email);
+        if (user.isPresent()) {
+            User userToUpdate = user.get();
+            userToUpdate.setPassword(newPassword);
+            userRepository.save(userToUpdate);
+            return true;
+        }
+        return false;
+    }
 }

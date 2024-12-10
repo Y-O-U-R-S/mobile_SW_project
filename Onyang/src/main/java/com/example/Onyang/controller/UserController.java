@@ -10,6 +10,7 @@ import com.example.Onyang.model.User;
 import com.example.Onyang.service.UserService;
 
 import java.util.List;
+import java.util.Map;
 
 // CORS 설정 : 특정 출처에서의 요청 허용
 @CrossOrigin(origins = "http://localhost:3000")
@@ -84,6 +85,31 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("조회 실패: " + e.getMessage());
+        }
+    }
+
+    // 사용자 찾기 컨트롤러
+    @PostMapping("/find-user")
+    public ResponseEntity<?> findUserByEmailAndName(@RequestBody User userDto) {
+        User user = userService.findByEmailAndName(userDto.getId(), userDto.getName());
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    // 비밀번호 재설정 컨트롤러
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String newPassword = request.get("newPassword");
+
+        boolean updated = userService.resetPassword(email, newPassword);
+        if (updated) {
+            return ResponseEntity.ok("비밀번호가 성공적으로 재설정되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호 재설정에 실패했습니다.");
         }
     }
 
